@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mock Payment - WISPAIR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .payment-wrap{max-width:600px;margin:48px auto;padding:24px;background:#fff;border-radius:8px}
+    .payment-field{display:block;width:100%;padding:8px;margin:8px 0}
+    .processing{opacity:.6}
+    .order-preview{white-space:pre-wrap;background:#f7f7f7;padding:12px;border-radius:6px;margin:12px 0}
+  </style>
+</head>
+<body>
+  <main class="payment-wrap">
+    <h1>Mock Payment Gateway</h1>
+    <p>This is a simulated payment page for testing. No real payments are processed.</p>
+
+    <div>
+      <div class="section-head"><p class="eyebrow">Order Summary</p></div>
+      <div id="orderPreview" class="order-preview">Loading order...</div>
+    </div>
+
+    <form id="paymentForm">
+      <label>Cardholder name<input class="payment-field" name="cardname" required placeholder="Jane Doe"></label>
+      <label>Card number<input class="payment-field" name="cardnum" required placeholder="4242 4242 4242 4242"></label>
+      <label>Expiry<input class="payment-field" name="exp" required placeholder="MM/YY"></label>
+      <label>CVV<input class="payment-field" name="cvv" required placeholder="123"></label>
+      <button class="btn primary" type="submit">Pay Now</button>
+      <button id="cancelBtn" class="btn" type="button">Cancel</button>
+    </form>
+
+    <div id="result" style="margin-top:12px"></div>
+  </main>
+
+  <script>
+    const preview = document.getElementById('orderPreview');
+    const orderMsg = localStorage.getItem('wispair-order-message');
+    const orderData = JSON.parse(localStorage.getItem('wispair-order-data') || '[]');
+    if (orderMsg) preview.textContent = orderMsg; else preview.textContent = 'No order found. Please start from the site.';
+
+    const form = document.getElementById('paymentForm');
+    const result = document.getElementById('result');
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      localStorage.setItem('wispair-payment-status', 'failed');
+      window.location.href = 'index.html';
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      result.textContent = 'Processing payment...';
+      form.classList.add('processing');
+      // Simulate async payment
+      setTimeout(() => {
+        // Simulate success
+        localStorage.setItem('wispair-payment-status', 'success');
+        result.textContent = 'Payment successful. Redirecting back...';
+        // Optionally record a fake transaction id
+        localStorage.setItem('wispair-payment-id', 'MOCK-' + Date.now());
+        setTimeout(() => { window.location.href = 'index.html'; }, 900);
+      }, 1400);
+    });
+  </script>
+</body>
+</html>

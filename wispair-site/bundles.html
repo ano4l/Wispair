@@ -11,18 +11,41 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <nav class="nav" aria-label="Main menu">
-      <a class="brand" href="index.html"><strong>Wispair</strong><span>Lashes - Beauty - Confidence</span></a>
-      <button class="icon-btn hamburger" type="button" data-menu-toggle aria-label="Open menu">Menu</button>
-      <div class="nav-links" data-nav-links>
+  <header class="top-utility-bar">
+    <button class="icon-btn search-btn" type="button" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </button>
+    
+    <!-- Mobile centered logo -->
+    <a href="index.html" class="mobile-logo-link">WISPAIR</a>
+
+    <!-- Desktop Navigation Grid -->
+    <div class="header-nav">
+      <div class="header-nav-left">
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
         <a href="products.html">Products</a>
-        <a class="active" href="bundles.html">Bundles</a>
+        <a href="bundles.html" class="active">Bundles</a>
       </div>
-      <button class="icon-btn" type="button" data-open-order>Order <span class="cart-count" data-cart-count>0</span></button>
-    </nav>
+      <div class="header-nav-center">
+        <a href="index.html" class="header-nav-logo">WISPAIR</a>
+      </div>
+      <div class="header-nav-right">
+        <a href="#" data-open-order>Order <span class="cart-count" data-cart-count>0</span></a>
+      </div>
+    </div>
+
+    <button class="icon-btn hamburger-btn" type="button" data-menu-toggle aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+
+    <!-- Mobile Drawer Dropdown -->
+    <div class="nav-links" data-nav-links>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="products.html">Products</a>
+      <a href="bundles.html" class="active">Bundles</a>
+    </div>
   </header>
 
   <main>

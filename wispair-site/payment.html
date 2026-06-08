@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mock Payment - WISPAIR</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <script>(function(){try{var t=localStorage.getItem('wispair-theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
   <link rel="stylesheet" href="styles.css">
   <style>
-    .payment-wrap{max-width:600px;margin:48px auto;padding:24px;background:#fff;border-radius:8px}
-    .payment-field{display:block;width:100%;padding:8px;margin:8px 0}
+    .payment-wrap{max-width:600px;margin:48px auto;padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+    .payment-field{display:block;width:100%;padding:8px;margin:8px 0;border:1px solid var(--line);border-radius:6px;background:var(--blush-2);color:var(--text)}
     .processing{opacity:.6}
-    .order-preview{white-space:pre-wrap;background:#f7f7f7;padding:12px;border-radius:6px;margin:12px 0}
+    .order-preview{white-space:pre-wrap;background:var(--blush-2);color:var(--muted);padding:12px;border-radius:6px;margin:12px 0}
   </style>
 </head>
 <body>

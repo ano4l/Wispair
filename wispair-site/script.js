@@ -12,6 +12,42 @@ const products = {
   bundle: { name: "WISPAIR Bundle", price: 550 }
 };
 
+/* Theme toggle: dark by default, switchable to light, persisted in localStorage. */
+const themeKey = "wispair-theme";
+const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>';
+const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+
+function applyTheme(theme) {
+  const isLight = theme === "light";
+  document.documentElement.setAttribute("data-theme", isLight ? "light" : "dark");
+  const btn = document.querySelector("[data-theme-toggle]");
+  if (btn) {
+    btn.innerHTML = isLight ? moonIcon : sunIcon;
+    btn.setAttribute("aria-label", isLight ? "Switch to dark mode" : "Switch to light mode");
+  }
+}
+
+function initThemeToggle() {
+  let theme = "dark";
+  try {
+    theme = localStorage.getItem(themeKey) || "dark";
+  } catch (e) {}
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "theme-toggle";
+  button.setAttribute("data-theme-toggle", "");
+  button.addEventListener("click", () => {
+    const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+    try { localStorage.setItem(themeKey, next); } catch (e) {}
+    applyTheme(next);
+  });
+  document.body.appendChild(button);
+  applyTheme(theme);
+}
+
+initThemeToggle();
+
 const cartKey = "wispair-order";
 let cart = JSON.parse(localStorage.getItem(cartKey) || "{}");
 

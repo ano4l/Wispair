@@ -158,15 +158,34 @@ textarea {
 }
 
 .hero {
-  min-height: 520px;
-  background:
-    linear-gradient(90deg, rgba(255, 250, 250, 0.96) 0%, rgba(255, 246, 247, 0.9) 34%, rgba(248, 232, 234, 0.48) 56%, rgba(248, 232, 234, 0.08) 100%),
-    url("assets/about.jpeg") right center / min(48vw, 560px) auto no-repeat,
-    linear-gradient(105deg, #fffafa 0%, #f7d9dd 100%);
+  position: relative;
+  min-height: min(86vh, 720px);
+  overflow: hidden;
+  background: #111011;
   border-bottom: 1px solid var(--line);
 }
 
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(17, 16, 17, 0.78) 0%, rgba(17, 16, 17, 0.5) 42%, rgba(17, 16, 17, 0.12) 100%),
+    linear-gradient(0deg, rgba(17, 16, 17, 0.45) 0%, rgba(17, 16, 17, 0) 45%);
+}
+
 .hero-inner {
+  position: relative;
+  z-index: 2;
   width: min(1180px, calc(100% - 36px));
   min-height: inherit;
   margin: 0 auto;
@@ -176,7 +195,28 @@ textarea {
 }
 
 .hero-copy {
-  max-width: 500px;
+  max-width: 520px;
+}
+
+.hero-wordmark {
+  margin: 0 0 6px;
+  color: #faa1d4;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+}
+
+.hero .eyebrow {
+  color: #f4cada;
+}
+
+.hero h1,
+.hero .lead {
+  color: #fff;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.5);
 }
 
 .eyebrow {
@@ -478,7 +518,11 @@ h3 {
 }
 
 .strip-card .product-image {
-  aspect-ratio: 16 / 8;
+  aspect-ratio: 642 / 290;
+}
+
+.strip-card .product-image img {
+  object-fit: contain;
 }
 
 .product-body {
@@ -826,10 +870,7 @@ footer {
   }
 
   .hero {
-    background:
-      linear-gradient(90deg, rgba(255, 250, 250, 0.96), rgba(255, 246, 247, 0.82)),
-      url("assets/about.jpeg") right bottom / 44% auto no-repeat,
-      linear-gradient(105deg, #fffafa 0%, #f7d9dd 100%);
+    min-height: min(70vh, 560px);
   }
 
   .service-row,
@@ -919,14 +960,11 @@ footer {
   }
 
   .hero {
-    min-height: auto;
-    background:
-      linear-gradient(180deg, rgba(255, 250, 250, 0.98) 0%, rgba(255, 246, 247, 0.9) 56%, rgba(248, 232, 234, 0.8) 100%),
-      url("assets/about.jpeg") right bottom / 62% auto no-repeat;
+    min-height: min(78vh, 520px);
   }
 
   .hero-inner {
-    padding: 52px 0 190px;
+    padding: 52px 0;
   }
 
   .hero-copy {

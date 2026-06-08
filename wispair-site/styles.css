@@ -1,15 +1,21 @@
 :root {
-  --ink: #161011;
-  --text: #2b2022;
-  --muted: #766265;
-  --blush: #f8e8ea;
-  --blush-2: #fff6f7;
-  --rose: #d96f88;
-  --rose-dark: #b8506c;
-  --cream: #fffafa;
-  --line: rgba(217, 111, 136, 0.24);
-  --soft-line: rgba(43, 32, 34, 0.09);
-  --shadow: 0 18px 45px rgba(117, 76, 84, 0.14);
+  /* WISPAIR brand palette (from brand guide)
+     Light Magenta #faa1d4 - Light Pink #f4cada - White #ffffff - Black #000000 */
+  --magenta: #faa1d4;
+  --pink: #f4cada;
+  --black: #000000;
+
+  --ink: #100b0e;
+  --text: #241c20;
+  --muted: #7a6c73;
+  --blush: #f4cada;
+  --blush-2: #fdeef6;
+  --rose: #faa1d4;
+  --rose-dark: #c23d8d;
+  --cream: #ffffff;
+  --line: rgba(250, 161, 212, 0.42);
+  --soft-line: rgba(16, 11, 14, 0.08);
+  --shadow: 0 18px 45px rgba(194, 61, 141, 0.16);
   --radius: 8px;
 }
 
@@ -50,7 +56,7 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 30;
-  background: rgba(255, 250, 250, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   border-bottom: 1px solid var(--soft-line);
   backdrop-filter: blur(18px);
 }
@@ -138,9 +144,10 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--ink);
   background: var(--rose);
   font-size: 0.72rem;
+  font-weight: 900;
 }
 
 .hamburger {
@@ -161,7 +168,7 @@ textarea {
   position: relative;
   min-height: min(86vh, 720px);
   overflow: hidden;
-  background: #111011;
+  background: var(--black);
   border-bottom: 1px solid var(--line);
 }
 
@@ -179,8 +186,8 @@ textarea {
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(90deg, rgba(17, 16, 17, 0.78) 0%, rgba(17, 16, 17, 0.5) 42%, rgba(17, 16, 17, 0.12) 100%),
-    linear-gradient(0deg, rgba(17, 16, 17, 0.45) 0%, rgba(17, 16, 17, 0) 45%);
+    linear-gradient(90deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.5) 42%, rgba(0, 0, 0, 0.12) 100%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 45%);
 }
 
 .hero-inner {
@@ -296,9 +303,10 @@ h3 {
 }
 
 .btn.primary {
-  color: #fff;
+  color: var(--ink);
+  border-color: var(--rose);
   background: var(--rose);
-  box-shadow: 0 12px 25px rgba(217, 111, 136, 0.22);
+  box-shadow: 0 12px 25px rgba(250, 161, 212, 0.4);
 }
 
 .btn.small {
@@ -440,9 +448,9 @@ h3 {
 .cta-band {
   color: #fff;
   background:
-    linear-gradient(90deg, rgba(17, 16, 17, 0.98), rgba(17, 16, 17, 0.88), rgba(17, 16, 17, 0.64)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.62)),
     url("assets/bundle.jpeg") right 42% / min(43vw, 520px) auto no-repeat,
-    #111011;
+    var(--black);
 }
 
 .cta-inner {
@@ -467,7 +475,7 @@ h3 {
 }
 
 .cta-script {
-  color: #f2a1b2;
+  color: var(--magenta);
   font-family: "Georgia", "Times New Roman", serif;
   font-size: clamp(2rem, 4vw, 3.4rem);
   font-style: italic;
@@ -646,7 +654,7 @@ h3 {
   inset: 0;
   z-index: 40;
   display: none;
-  background: rgba(22, 16, 17, 0.42);
+  background: rgba(0, 0, 0, 0.45);
 }
 
 .drawer-backdrop.open {
@@ -791,8 +799,8 @@ h3 {
 }
 
 footer {
-  color: #d9c6ca;
-  background: #111011;
+  color: #e7d5e0;
+  background: var(--black);
 }
 
 .footer-inner {
@@ -814,7 +822,7 @@ footer {
 .footer-inner span {
   margin: 8px 0 0;
   display: block;
-  color: #d9c6ca;
+  color: #e7d5e0;
   font-size: 0.88rem;
 }
 
@@ -829,9 +837,9 @@ footer {
 .copyright {
   width: min(1180px, calc(100% - 36px));
   margin: 0 auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(250, 161, 212, 0.22);
   padding: 14px 0;
-  color: #bfaeb2;
+  color: #c9b3c2;
   text-align: center;
   font-size: 0.82rem;
 }

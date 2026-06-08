@@ -218,67 +218,212 @@ textarea {
   padding: 40px 0 30px;
 }
 
+/* Top utility bar matching the graphic layout (white strip on top) */
+.top-utility-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: 44px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.top-utility-bar .icon-btn {
+  background: transparent;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 160ms ease;
+}
+
+.top-utility-bar .icon-btn:hover {
+  opacity: 0.7;
+}
+
+.top-utility-bar .icon-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.top-utility-bar .nav-links {
+  display: none; /* hidden on desktop - handled by overlay menu inside hero */
+}
+
+/* Custom Widescreen Hero with absolute overlay menu and overlapping brand seam */
 .hero {
   position: relative;
-  min-height: min(86vh, 720px);
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-video-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 620px;
+  background: #000000;
   overflow: hidden;
-  background: var(--black);
-  border-bottom: 1px solid var(--line);
 }
 
 .hero-video {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.5) 42%, rgba(0, 0, 0, 0.12) 100%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 45%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.25) 100%);
 }
 
-.hero-inner {
-  position: relative;
-  z-index: 2;
-  width: min(1180px, calc(100% - 36px));
-  min-height: inherit;
-  margin: 0 auto;
+.hero-nav {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  z-index: 15;
   display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 76px 0;
-}
-
-.hero-copy {
-  max-width: 520px;
-}
-
-.hero-wordmark {
-  margin: 0 0 10px;
+  padding: 0 24px;
   color: #ffffff;
-  font-family: var(--display);
-  font-size: clamp(2.6rem, 8vw, 5.4rem);
-  font-weight: 400;
-  line-height: 0.95;
-  letter-spacing: 0.03em;
+}
+
+.hero-nav-left {
+  display: flex;
+  gap: 22px;
+  justify-content: flex-start;
+}
+
+.hero-nav-left a {
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+  font-family: "Montserrat", sans-serif;
+  transition: opacity 160ms ease;
 }
 
-.hero .eyebrow {
-  color: #f4cada;
+.hero-nav-left a:hover {
+  opacity: 0.8;
 }
 
-.hero h1,
-.hero .lead {
-  color: #fff;
-  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.5);
+.hero-nav-center {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-nav-logo {
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.hero-nav-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-nav-right a {
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: "Montserrat", sans-serif;
+  transition: opacity 160ms ease;
+}
+
+.hero-nav-right a:hover {
+  opacity: 0.8;
+}
+
+.hero-black-extension {
+  height: 160px;
+  background: #000000;
+  width: 100%;
+  position: relative;
+}
+
+.hero-brand-promo {
+  position: absolute;
+  top: -85px; /* pull up to overlap the video bottom border */
+  left: 24px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.promo-title-wrap {
+  position: relative;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.promo-main-title {
+  display: block;
+  font-family: var(--display);
+  color: #faa1d4;
+  font-size: clamp(3.2rem, 11vw, 7.8rem);
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+}
+
+.promo-sub-title {
+  position: absolute;
+  bottom: -22px;
+  left: 4px;
+  font-family: var(--script);
+  color: #ffffff;
+  font-size: clamp(2.6rem, 8vw, 5.6rem);
+  font-style: italic;
+  text-transform: none;
+  line-height: 1;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+}
+
+.btn-shop-bundle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #faa1d4;
+  color: #ffffff;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border-radius: 2px;
+  margin-top: 26px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+  transition: transform 160ms ease, background 160ms ease;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-shop-bundle:hover {
+  transform: translateY(-2px);
+  background: #f4cada;
 }
 
 .eyebrow {
@@ -942,7 +1087,38 @@ footer {
   }
 
   .hero {
-    min-height: min(70vh, 560px);
+    min-height: auto;
+  }
+
+  .hero-video-wrap {
+    aspect-ratio: 16 / 11;
+  }
+
+  .hero-nav {
+    display: none; /* Hide wide header inside video frame on tablets/mobiles */
+  }
+
+  .top-utility-bar .nav-links {
+    position: absolute;
+    top: 44px;
+    left: 18px;
+    right: 18px;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 10px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .top-utility-bar .nav-links.open {
+    display: flex;
+  }
+
+  .top-utility-bar .nav-links a {
+    justify-content: flex-start;
   }
 
   .service-row,
@@ -1032,37 +1208,36 @@ footer {
   }
 
   .hero {
-    min-height: min(78vh, 520px);
+    min-height: auto;
   }
 
-  .hero-inner {
-    padding: 52px 0;
+  .hero-video-wrap {
+    aspect-ratio: 1 / 1;
+    max-height: 380px;
   }
 
-  .hero-copy {
-    max-width: calc(100vw - 22px);
-    min-width: 0;
+  .hero-brand-promo {
+    top: -65px;
+    left: 14px;
   }
 
-  h1 {
-    max-width: 8.2ch;
-    font-size: clamp(2.55rem, 12.5vw, 3.45rem);
-    overflow-wrap: anywhere;
+  .hero-black-extension {
+    height: 125px;
   }
 
-  .lead {
-    max-width: 100%;
-    overflow-wrap: anywhere;
+  .promo-main-title {
+    font-size: 3.4rem;
   }
 
-  .hero-actions,
-  .button-row {
-    display: grid;
-    grid-template-columns: 1fr;
+  .promo-sub-title {
+    font-size: 2.3rem;
+    bottom: -14px;
   }
 
-  .btn {
-    width: 100%;
+  .btn-shop-bundle {
+    margin-top: 18px;
+    padding: 8px 14px;
+    font-size: 0.72rem;
   }
 
   .gallery-strip {

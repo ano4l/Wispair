@@ -356,8 +356,8 @@ textarea {
 .hero-video-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  max-height: 620px;
+  aspect-ratio: 16 / 12; /* Slightly taller aspect ratio to fit more vertically */
+  max-height: 720px; /* Taller display ceiling */
   background: #000000;
   overflow: hidden;
 }
@@ -1179,7 +1179,7 @@ footer {
   }
 
   .hero-video-wrap {
-    aspect-ratio: 16 / 11;
+    aspect-ratio: 16 / 13; /* Taller vertically on tablets */
   }
 
   .hero-nav {
@@ -1300,8 +1300,8 @@ footer {
   }
 
   .hero-video-wrap {
-    aspect-ratio: 1 / 1;
-    max-height: 380px;
+    aspect-ratio: 4 / 5; /* Taller vertically on mobile */
+    max-height: 480px;
   }
 
   .hero-brand-promo {
@@ -1332,3 +1332,70 @@ footer {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ==========================================
+   Premium High-Performance Page Animations
+   ========================================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Apply smooth composited fades on main section entrances */
+.section,
+.image-benefits,
+.cta-band,
+.product-card,
+.about-panel,
+.service,
+.step,
+.reason {
+  opacity: 0;
+  animation: fadeInUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger section delay naturally as users scroll down */
+.section:nth-of-type(1) { animation-delay: 100ms; }
+.section:nth-of-type(2) { animation-delay: 200ms; }
+.section:nth-of-type(3) { animation-delay: 300ms; }
+.image-benefits { animation-delay: 250ms; }
+.cta-band { animation-delay: 200ms; }
+
+/* Immediate soft fades for navigation headers */
+.top-utility-bar {
+  animation: fadeIn 0.5s ease both;
+}
+
+.hero-nav {
+  animation: fadeIn 0.8s ease 100ms both;
+}
+
+/* Staggered text & CTA reveal on the Hero banner */
+.hero-brand-promo {
+  opacity: 0;
+  animation: fadeInUp 0.95s cubic-bezier(0.16, 1, 0.3, 1) 250ms both;
+}
+
+/* Smooth list item stagger inside product details */
+.details li {
+  opacity: 0;
+  animation: fadeIn 0.6s ease both;
+}
+.details li:nth-child(1) { animation-delay: 200ms; }
+.details li:nth-child(2) { animation-delay: 300ms; }
+.details li:nth-child(3) { animation-delay: 400ms; }

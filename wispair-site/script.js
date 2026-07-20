@@ -49,7 +49,12 @@ function initThemeToggle() {
 initThemeToggle();
 
 const cartKey = "wispair-order";
-let cart = JSON.parse(localStorage.getItem(cartKey) || "{}");
+let cart = {};
+try {
+  cart = JSON.parse(localStorage.getItem(cartKey) || "{}") || {};
+} catch (e) {
+  cart = {};
+}
 
 const money = (value) => `R${value.toFixed(2).replace(".", ",")}`;
 const cartCountEls = document.querySelectorAll("[data-cart-count]");
@@ -60,7 +65,9 @@ const backdrop = document.querySelector("[data-drawer-backdrop]");
 const toast = document.querySelector("[data-toast]");
 
 function saveCart() {
-  localStorage.setItem(cartKey, JSON.stringify(cart));
+  try {
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+  } catch (e) {}
 }
 
 function cartCount() {
@@ -164,8 +171,22 @@ document.querySelectorAll("[data-close-order]").forEach((button) => {
 
 backdrop?.addEventListener("click", closeDrawer);
 
-document.querySelector("[data-menu-toggle]")?.addEventListener("click", () => {
-  document.querySelector("[data-nav-links]")?.classList.toggle("open");
+const menuToggle = document.querySelector("[data-menu-toggle]");
+menuToggle?.addEventListener("click", () => {
+  const links = document.querySelector("[data-nav-links]");
+  if (!links) return;
+  const isOpen = links.classList.toggle("open");
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  closeDrawer();
+  const links = document.querySelector("[data-nav-links]");
+  if (links?.classList.contains("open")) {
+    links.classList.remove("open");
+    menuToggle?.setAttribute("aria-expanded", "false");
+  }
 });
 
 document.querySelector("[data-order-form]")?.addEventListener("submit", async (event) => {
@@ -211,7 +232,10 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
 renderCart();
 
 // If returning from payment page, check payment status
-const paymentStatus = localStorage.getItem("wispair-payment-status");
+let paymentStatus = null;
+try {
+  paymentStatus = localStorage.getItem("wispair-payment-status");
+} catch (e) {}
 if (paymentStatus === "success") {
   showToast("Payment successful. Order placed.");
   localStorage.removeItem("wispair-payment-status");

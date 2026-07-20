@@ -796,12 +796,14 @@ h3 {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
+  aspect-ratio: 16 / 9;
 }
 
 .footer-banner img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
+  object-position: center 42%;
   display: block;
 }
 
@@ -1167,6 +1169,21 @@ footer {
     display: inline-flex;
   }
 
+  /* Collapse the wide desktop subpage nav; use hamburger drawer instead */
+  .header-nav {
+    display: none;
+  }
+
+  .mobile-logo-link {
+    display: block;
+  }
+
+  /* Meet 44x44 minimum touch target size */
+  .top-utility-bar .icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
   .nav {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto;
@@ -1261,6 +1278,12 @@ footer {
   .gallery-strip {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  .cta-image {
+    width: 100%;
+    max-width: 420px;
+    justify-self: center;
+  }
 }
 
 @media (max-width: 560px) {
@@ -1271,6 +1294,10 @@ footer {
   .footer-inner,
   .copyright {
     width: calc(100% - 22px);
+  }
+
+  .footer-banner {
+    aspect-ratio: 3 / 4;
   }
 
   .nav {

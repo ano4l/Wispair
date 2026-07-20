@@ -696,6 +696,11 @@ h3 {
   min-height: 280px;
 }
 
+.wide-photo.duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 .wide-photo img,
 .about-photo img,
 .bundle-photo img,
@@ -739,8 +744,7 @@ h3 {
 .cta-band {
   color: #fff;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.62)),
-    url("assets/bundle.jpeg") right 42% / min(43vw, 520px) auto no-repeat,
+    linear-gradient(90deg, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.72)),
     var(--black);
 }
 
@@ -755,8 +759,7 @@ h3 {
 }
 
 .cta-band h2,
-.cta-band p,
-.cta-script {
+.cta-band p {
   color: #fff;
 }
 
@@ -765,14 +768,16 @@ h3 {
   margin: 12px 0 0;
 }
 
-.cta-script {
-  color: var(--magenta);
-  font-family: "Montserrat", sans-serif;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  font-weight: 800;
-  font-style: italic;
-  line-height: 1.1;
-  text-transform: uppercase;
+.cta-image {
+  width: min(43vw, 420px);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.cta-image img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .gallery-strip {

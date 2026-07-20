@@ -1,0 +1,22 @@
+# Build / deploy outputs
+.vercel
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary scripts
+*.tmp
+*.bak
+organize_repo.py

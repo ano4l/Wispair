@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Owner dashboard | WISPAIR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      try {
+        document.documentElement.setAttribute("data-theme", localStorage.getItem("wispair-theme") === "dark" ? "dark" : "light");
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    html,
+    body.owner-body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body.owner-body {
+      min-height: 100vh;
+      background: #f6f6f7;
+      color: #1d1b20;
+    }
+
+    .owner-login {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: linear-gradient(180deg, #fff 0%, #f7edf3 100%);
+    }
+
+    .login-card,
+    .owner-card,
+    .owner-drawer {
+      background: #fff;
+      border: 1px solid #e7e1e5;
+      border-radius: 8px;
+      box-shadow: 0 18px 45px rgba(23, 19, 32, 0.08);
+    }
+
+    .login-card {
+      width: min(440px, 100%);
+      padding: 30px;
+    }
+
+    .owner-mark {
+      font-family: var(--display);
+      color: #100b0e;
+      font-size: 2rem;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      margin: 0 0 16px;
+    }
+
+    .login-card h1,
+    .view-title h1 {
+      color: #100b0e;
+      font-size: clamp(1.65rem, 2.5vw, 2.25rem);
+      line-height: 1.08;
+      margin: 0;
+    }
+
+    .owner-muted {
+      color: #71686e;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .owner-label {
+      display: grid;
+      gap: 7px;
+      color: #4b4248;
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .owner-input,
+    .owner-select,
+    .owner-textarea {
+      width: 100%;
+      border: 1px solid #ddd5da;
+      border-radius: 8px;
+      background: #fff;
+      color: #171219;
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    .owner-textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .owner-input:focus,
+    .owner-select:focus,
+    .owner-textarea:focus {
+      border-color: #c23d8d;
+      box-shadow: 0 0 0 3px rgba(250, 161, 212, 0.22);
+    }
+
+    .owner-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      border: 1px solid #d8d0d5;
+      border-radius: 8px;
+      background: #fff;
+      color: #201b20;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .owner-btn:hover {
+      background: #faf4f8;
+      border-color: #cbbec7;
+    }
+
+    .owner-btn.primary {
+      background: #100b0e;
+      border-color: #100b0e;
+      color: #fff;
+    }
+
+    .owner-btn.danger {
+      border-color: #f1c4ca;
+      color: #9d2635;
+      background: #fff7f8;
+    }
+
+    .owner-btn.full {
+      width: 100%;
+    }
+
+    .owner-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px 1fr;
+    }
+
+    .owner-sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      padding: 28px 18px;
+      background: #100b0e;
+      color: #fdf3f8;
+    }
+
+    .owner-sidebar .owner-mark {
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .owner-nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .owner-nav button {
+      justify-content: flex-start;
+      width: 100%;
+      min-height: 42px;
+      border-color: transparent;
+      background: transparent;
+      color: #d9cfd6;
+    }
+
+    .owner-nav button.active,
+    .owner-nav button:hover {
+      background: #241b23;
+      color: #fff;
+    }
+
+    .owner-sidebar-footer {
+      margin-top: auto;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      color: #d9cfd6;
+      font-size: 0.82rem;
+    }
+
+    .owner-pulse {
+      margin-top: 14px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .pulse-row {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      align-items: center;
+      gap: 9px;
+      color: #d9cfd6;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .pulse-bar {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(250, 161, 212, 0.18);
+      overflow: hidden;
+    }
+
+    .pulse-bar span {
+      display: block;
+      height: 100%;
+      width: var(--bar);
+      background: #faa1d4;
+    }
+
+    .owner-main {
+      min-width: 0;
+      padding: 26px;
+    }
+
+    .owner-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .view-title {
+      display: grid;
+      gap: 8px;
+    }
+
+    .owner-user {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 8px 10px;
+      border: 1px solid #e7e1e5;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .owner-avatar {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #100b0e;
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      padding: 18px;
+    }
+
+    .metric span {
+      display: block;
+      color: #756b72;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .metric strong {
+      display: block;
+      color: #100b0e;
+      font-size: 1.65rem;
+      line-height: 1;
+      margin-top: 11px;
+    }
+
+    .metric small {
+      display: block;
+      color: #756b72;
+      margin-top: 8px;
+    }
+
+    .owner-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.42fr) minmax(320px, 0.72fr);
+      gap: 16px;
+    }
+
+    .owner-card {
+      padding: 18px;
+    }
+
+    .card-head,
+    .toolbar,
+    .detail-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-head {
+      margin-bottom: 14px;
+      padding-bottom: 13px;
+      border-bottom: 1px solid #eee8ec;
+    }
+
+    .card-head h2 {
+      margin: 0;
+      color: #100b0e;
+      font-size: 1rem;
+    }
+
+    .toolbar {
+      margin-bottom: 14px;
+    }
+
+    .toolbar .owner-input {
+      max-width: 340px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .orders-table,
+    .customers-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    .orders-table th,
+    .orders-table td,
+    .customers-table th,
+    .customers-table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #eee8ec;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.84rem;
+    }
+
+    .orders-table th,
+    .customers-table th {
+      color: #756b72;
+      font-size: 0.7rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .orders-table tbody tr {
+      cursor: pointer;
+    }
+
+    .orders-table tbody tr:hover {
+      background: #fff7fb;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status-payment-review {
+      background: #fff3d8;
+      color: #7c5310;
+    }
+
+    .status-order-confirmed {
+      background: #e8f8ee;
+      color: #1d6c3f;
+    }
+
+    .status-on-its-way {
+      background: #eaf2ff;
+      color: #28528f;
+    }
+
+    .status-delivered {
+      background: #efe9ff;
+      color: #5b3a98;
+    }
+
+    .empty-state {
+      display: grid;
+      place-items: center;
+      min-height: 220px;
+      border: 1px dashed #d8d0d5;
+      border-radius: 8px;
+      color: #756b72;
+      text-align: center;
+      padding: 26px;
+    }
+
+    .priority-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .priority-card {
+      display: grid;
+      grid-template-columns: 6px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid #eee8ec;
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      font: inherit;
+      color: #1d1b20;
+    }
+
+    .priority-card:hover {
+      border-color: #d7c2ce;
+      background: #fff7fb;
+    }
+
+    .priority-rail {
+      align-self: stretch;
+      border-radius: 999px;
+      background: #faa1d4;
+    }
+
+    .priority-card[data-status="Payment review"] .priority-rail {
+      background: #c4831c;
+    }
+
+    .priority-card[data-status="Order confirmed"] .priority-rail {
+      background: #1d8a50;
+    }
+
+    .priority-card[data-status="On its way"] .priority-rail {
+      background: #315f89;
+    }
+
+    .priority-main {
+      min-width: 0;
+    }
+
+    .priority-main strong,
+    .priority-total strong {
+      color: #100b0e;
+    }
+
+    .priority-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 7px;
+      color: #71686e;
+      font-size: 0.76rem;
+    }
+
+    .priority-total {
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 10px;
+      color: #4b4248;
+      font-size: 0.86rem;
+    }
+
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 7px;
+      border-radius: 50%;
+      background: #d9d0d6;
+    }
+
+    .timeline-item.done .timeline-dot {
+      background: #1d8a50;
+    }
+
+    .detail-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      background: rgba(16, 11, 14, 0.28);
+    }
+
+    .detail-backdrop.open {
+      display: block;
+    }
+
+    .owner-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 80;
+      width: min(500px, 100vw);
+      max-width: 100vw;
+      height: 100vh;
+      padding: 22px;
+      overflow-y: auto;
+      box-sizing: border-box;
+      transform: translate3d(100%, 0, 0);
+      transition: transform 180ms ease;
+      will-change: transform;
+      contain: layout paint;
+    }
+
+    .owner-drawer.open {
+      transform: translate3d(0, 0, 0);
+    }
+
+    .drawer-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee8ec;
+      color: #4b4248;
+      font-size: 0.88rem;
+    }
+
+    .detail-row strong {
+      color: #100b0e;
+      text-align: right;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .notice {
+      padding: 13px;
+      border: 1px solid #ead5df;
+      border-radius: 8px;
+      background: #fff7fb;
+      color: #4b4248;
+      font-size: 0.86rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .owner-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .owner-sidebar {
+        position: static;
+        height: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 14px 16px;
+      }
+
+      .owner-nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .owner-sidebar-footer {
+        display: none;
+      }
+
+      .owner-grid,
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .owner-main {
+        padding: 14px;
+      }
+
+      .owner-topbar {
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .owner-user {
+        width: 100%;
+        padding: 7px 8px;
+      }
+
+      .owner-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+      }
+
+      .owner-user .owner-muted,
+      .view-title .owner-muted {
+        display: none;
+      }
+
+      .view-title {
+        gap: 5px;
+      }
+
+      .view-title h1 {
+        font-size: 1.45rem;
+      }
+
+      .metric {
+        padding: 12px;
+      }
+
+      .metric strong {
+        font-size: 1.25rem;
+        margin-top: 7px;
+      }
+
+      .metric small {
+        display: none;
+      }
+
+      .owner-nav {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .owner-btn {
+        width: 100%;
+      }
+
+      .toolbar .owner-input {
+        max-width: none;
+      }
+
+      .priority-card {
+        grid-template-columns: 5px minmax(0, 1fr);
+      }
+
+      .priority-total {
+        grid-column: 2;
+        justify-items: start;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body class="owner-body">
+  <section id="login" class="owner-login">
+    <form class="login-card" id="loginForm">
+      <p class="owner-mark">WISPAIR</p>
+      <p class="eyebrow">Private access</p>
+      <h1>Owner dashboard</h1>
+      <p class="owner-muted" style="margin: 10px 0 22px;">Manage manual payments, order status, customer records and fulfilment notes.</p>
+      <label class="owner-label">Owner PIN
+        <input id="pin" class="owner-input" type="password" inputmode="numeric" maxlength="4" placeholder="1410" autocomplete="current-password">
+      </label>
+      <button class="owner-btn primary full" type="submit" style="margin-top: 16px;">Unlock dashboard</button>
+      <p id="loginError" class="owner-muted" style="min-height: 22px; margin-top: 12px;"></p>
+    </form>
+  </section>
+
+  <main id="app" class="owner-shell hidden">
+    <aside class="owner-sidebar">
+      <div>
+        <p class="owner-mark">WISPAIR</p>
+        <p class="owner-muted" style="color: #bfb3bb;">Owner operations</p>
+      </div>
+      <nav class="owner-nav" aria-label="Owner dashboard">
+        <button class="owner-btn active" type="button" data-view-link="overview">Overview</button>
+        <button class="owner-btn" type="button" data-view-link="orders">Orders</button>
+        <button class="owner-btn" type="button" data-view-link="customers">Customers</button>
+        <button class="owner-btn" type="button" data-view-link="settings">Settings</button>
+      </nav>
+      <div class="owner-sidebar-footer">
+        <strong>Payment:</strong> FNB manual EFT<br>
+        <strong>Mode:</strong> Owner verified orders
+        <div class="owner-pulse" aria-label="WISPAIR operations pulse">
+          <div class="pulse-row"><span>Paid</span><div class="pulse-bar"><span style="--bar:72%"></span></div></div>
+          <div class="pulse-row"><span>Pack</span><div class="pulse-bar"><span style="--bar:54%"></span></div></div>
+          <div class="pulse-row"><span>Send</span><div class="pulse-bar"><span style="--bar:38%"></span></div></div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="owner-main">
+      <header class="owner-topbar">
+        <div class="view-title">
+          <p class="eyebrow" id="viewEyebrow">Store overview</p>
+          <h1 id="viewHeading">Dashboard</h1>
+          <p class="owner-muted" id="viewCopy">Review payments, confirm orders and keep customers updated.</p>
+        </div>
+        <div class="owner-user">
+          <div class="owner-avatar">OW</div>
+          <div>
+            <strong>Owner</strong>
+            <p class="owner-muted">PIN session active</p>
+          </div>
+          <button class="owner-btn" type="button" id="logoutBtn">Log out</button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-overview">
+        <div class="metrics-grid" id="metrics"></div>
+        <div class="owner-grid">
+          <section class="owner-card">
+            <div class="card-head">
+              <h2>Orders needing action</h2>
+              <button class="owner-btn" type="button" data-view-link="orders">View all</button>
+            </div>
+            <div id="actionOrders"></div>
+          </section>
+          <aside class="owner-card">
+            <div class="card-head">
+              <h2>Fulfilment flow</h2>
+            </div>
+            <div class="timeline" id="timeline"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="view-orders">
+        <section class="owner-card">
+          <div class="card-head">
+            <h2>Orders</h2>
+            <span class="owner-muted" id="orderCount"></span>
+          </div>
+          <div class="toolbar">
+            <input class="owner-input" id="orderSearch" type="search" placeholder="Search customer, reference or email">
+            <select class="owner-select" id="statusFilter" aria-label="Filter orders by status">
+              <option value="all">All statuses</option>
+              <option>Payment review</option>
+              <option>Order confirmed</option>
+              <option>On its way</option>
+              <option>Delivered</option>
+            </select>
+          </div>
+          <div class="table-wrap" id="ordersTable"></div>
+        </section>
+      </section>
+
+      <section class="view" id="view-customers">
+        <section class="owner-card">
+          <div class="card-head">
+            <h2>Customers</h2>
+            <span class="owner-muted" id="customerCount"></span>
+          </div>
+          <div class="table-wrap" id="customersTable"></div>
+        </section>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="settings-grid">
+          <section class="owner-card">
+            <div class="card-head">
+              <h2>Change owner PIN</h2>
+            </div>
+            <form id="pinForm">
+              <label class="owner-label">Current PIN
+                <input class="owner-input" name="currentPin" type="password" inputmode="numeric" maxlength="4" required>
+              </label>
+              <label class="owner-label" style="margin-top: 12px;">New 4-digit PIN
+                <input class="owner-input" name="newPin" type="password" inputmode="numeric" maxlength="4" required>
+              </label>
+              <button class="owner-btn primary" type="submit" style="margin-top: 16px;">Save PIN</button>
+              <p class="owner-muted" id="pinMessage" style="margin-top: 12px;"></p>
+            </form>
+          </section>
+
+          <section class="owner-card">
+            <div class="card-head">
+              <h2>Payment details</h2>
+            </div>
+            <div class="notice">
+              Customer checkout displays the FNB account details and requires the personalized WSP reference for payment matching.
+            </div>
+            <div class="detail-list">
+              <div class="detail-row"><span>Bank</span><strong>FNB</strong></div>
+              <div class="detail-row"><span>Account number</span><strong>62793660103</strong></div>
+              <div class="detail-row"><span>Branch code</span><strong>250655</strong></div>
+              <div class="detail-row"><span>Payment mode</span><strong>Manual EFT verification</strong></div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="detail-backdrop" id="detailBackdrop"></div>
+  <aside class="owner-drawer" id="orderDrawer" aria-label="Order details">
+    <div class="drawer-head">
+      <div>
+        <p class="eyebrow">Order details</p>
+        <h2 id="drawerTitle" style="margin: 0; color: #100b0e;"></h2>
+        <p class="owner-muted" id="drawerStatus"></p>
+      </div>
+      <button class="owner-btn" type="button" id="closeDrawer">Close</button>
+    </div>
+    <div id="drawerContent"></div>
+  </aside>
+
+  <script>
+    const pinKey = "wispair-owner-pin";
+    const orderKey = "wispair-orders";
+    const statuses = ["Payment review", "Order confirmed", "On its way", "Delivered"];
+    const demoOrders = [
+      {
+        id: "WSP-RUVA01",
+        reference: "WSP-RUVA01",
+        customer: "Ruva",
+        email: "ruva@example.com",
+        phone: "071 234 5678",
+        items: [
+          { name: "WISPYANGEL", price: 350, qty: 1 },
+          { name: "SIREN", price: 120, qty: 1 }
+        ],
+        total: 470,
+        status: "Payment review",
+        createdAt: "2026-08-02T08:15:00.000Z",
+        proofNote: "Demo EFT pending owner verification",
+        notes: "Delivery in Johannesburg"
+      },
+      {
+        id: "WSP-RUVA02",
+        reference: "WSP-RUVA02",
+        customer: "Ruva",
+        email: "ruva@example.com",
+        phone: "071 234 5678",
+        items: [
+          { name: "WISPAIR Bundle", price: 550, qty: 1 }
+        ],
+        total: 550,
+        status: "Order confirmed",
+        createdAt: "2026-08-01T13:30:00.000Z",
+        proofNote: "Demo payment matched",
+        notes: "Gift packaging requested"
+      },
+      {
+        id: "WSP-RUVA03",
+        reference: "WSP-RUVA03",
+        customer: "Ruva",
+        email: "ruva@example.com",
+        phone: "071 234 5678",
+        items: [
+          { name: "BRATZ DOLL", price: 350, qty: 1 },
+          { name: "WINX", price: 120, qty: 1 }
+        ],
+        total: 470,
+        status: "Delivered",
+        createdAt: "2026-07-30T10:45:00.000Z",
+        proofNote: "Demo completed order",
+        notes: "Collected"
+      }
+    ];
+    const statusText = {
+      "Payment review": "Payment review",
+      "Order confirmed": "Order confirmed",
+      "On its way": "On its way",
+      "Delivered": "Delivered"
+    };
+    const viewMeta = {
+      overview: ["Store overview", "Dashboard", "Review payments, confirm orders and keep fulfilment moving."],
+      orders: ["Manual orders", "Orders", "Verify EFT payments and move fulfilment forward."],
+      customers: ["Customer records", "Customers", "View customer order history and contact details."],
+      settings: ["Private setup", "Settings", "Manage the owner PIN and payment details."]
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const money = (value) => Number(value || 0).toLocaleString("en-ZA", { style: "currency", currency: "ZAR" });
+    const clean = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    }[char]));
+
+    function readOrders() {
+      try {
+        return JSON.parse(localStorage.getItem(orderKey) || "[]").map((order, index) => ({
+          id: order.id || order.reference || String(index),
+          status: order.status || "Payment review",
+          items: order.items || [],
+          ...order
+        }));
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveOrders(orders) {
+      localStorage.setItem(orderKey, JSON.stringify(orders));
+    }
+
+    function statusClass(status) {
+      return `status-chip status-${String(status || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+    }
+
+    function orderDate(order) {
+      if (!order.createdAt) return "Pending date";
+      return new Date(order.createdAt).toLocaleString("en-ZA", { dateStyle: "medium", timeStyle: "short" });
+    }
+
+    function itemSummary(order) {
+      if (!order.items || !order.items.length) return "No items recorded";
+      return order.items.map((item) => `${item.qty || 1} x ${item.name || "Item"}`).join(", ");
+    }
+
+    function nextAction(order) {
+      if (order.status === "Payment review") return "Verify payment";
+      if (order.status === "Order confirmed") return "Mark on way";
+      if (order.status === "On its way") return "Mark delivered";
+      return "Delivered";
+    }
+
+    function lifecycleAction(order) {
+      const orders = readOrders();
+      const index = orders.findIndex((candidate) => (candidate.reference || candidate.id) === (order.reference || order.id));
+      if (index < 0) return;
+
+      if (orders[index].status === "Order confirmed") {
+        const fulfilmentNote = window.prompt("Fulfilment note (optional):", orders[index].fulfilmentNote || "");
+        if (fulfilmentNote !== null) orders[index].fulfilmentNote = fulfilmentNote.trim();
+      }
+
+      const current = statuses.indexOf(orders[index].status);
+      orders[index].status = statuses[Math.min(current + 1, statuses.length - 1)];
+      orders[index].updatedAt = new Date().toISOString();
+      saveOrders(orders);
+      render();
+      openOrder(orders[index]);
+    }
+
+    function renderMetrics(orders) {
+      const sales = orders.filter((order) => order.status !== "Payment review").reduce((sum, order) => sum + Number(order.total || 0), 0);
+      const customers = new Set(orders.map((order) => (order.email || order.customer || "").toLowerCase()).filter(Boolean));
+      const awaiting = orders.filter((order) => order.status === "Payment review").length;
+      $("metrics").innerHTML = [
+        ["Verified sales", money(sales), "Confirmed and fulfilled value"],
+        ["Orders", orders.length, "All manual EFT orders"],
+        ["Customers", customers.size, "Unique customer contacts"],
+        ["Awaiting review", awaiting, "Needs owner payment check"]
+      ].map(([label, value, hint]) => `
+        <article class="owner-card metric">
+          <span>${label}</span>
+          <strong>${value}</strong>
+          <small>${hint}</small>
+        </article>
+      `).join("");
+    }
+
+    function renderPriorityOrders(targetId, orders, limit) {
+      const visible = typeof limit === "number" ? orders.slice(0, limit) : orders;
+      if (!visible.length) {
+        $(targetId).innerHTML = `<div class="empty-state"><div><strong>No active order work.</strong><br><span>Paid, packed and delivered orders stay in the full order queue.</span></div></div>`;
+        return;
+      }
+
+      $(targetId).innerHTML = `
+        <div class="priority-list">
+          ${visible.map((order) => `
+            <button class="priority-card" type="button" data-open-order="${clean(order.reference || order.id)}" data-status="${clean(order.status)}">
+              <span class="priority-rail"></span>
+              <span class="priority-main">
+                <strong>${clean(order.reference)} | ${clean(order.customer || "Customer")}</strong>
+                <span class="priority-meta">
+                  <span>${clean(orderDate(order))}</span>
+                  <span>${clean(itemSummary(order))}</span>
+                  <span>${clean(order.email || order.phone || "No contact")}</span>
+                </span>
+              </span>
+              <span class="priority-total">
+                <strong>${money(order.total)}</strong>
+                <span class="${statusClass(order.status)}">${clean(nextAction(order))}</span>
+              </span>
+            </button>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderOrdersTable(targetId, orders, limit) {
+      const visible = typeof limit === "number" ? orders.slice(0, limit) : orders;
+      if (!visible.length) {
+        $(targetId).innerHTML = `<div class="empty-state"><div><strong>No orders yet.</strong><br><span>Manual EFT submissions will appear here after checkout.</span></div></div>`;
+        return;
+      }
+
+      $(targetId).innerHTML = `
+        <div class="table-wrap">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${visible.map((order) => `
+                <tr data-open-order="${clean(order.reference || order.id)}">
+                  <td><strong>${clean(order.reference)}</strong><br><span class="owner-muted">${clean(orderDate(order))}</span></td>
+                  <td><strong>${clean(order.customer)}</strong><br><span class="owner-muted">${clean(order.email || order.phone || "No contact")}</span></td>
+                  <td><strong>${money(order.total)}</strong><br><span class="owner-muted">${clean(itemSummary(order))}</span></td>
+                  <td><span class="${statusClass(order.status)}">${clean(statusText[order.status] || order.status)}</span></td>
+                  <td><button class="owner-btn" type="button" data-action-order="${clean(order.reference || order.id)}">${clean(nextAction(order))}</button></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function filteredOrders() {
+      const term = $("orderSearch").value.trim().toLowerCase();
+      const status = $("statusFilter").value;
+      return readOrders().filter((order) => {
+        const haystack = [order.reference, order.customer, order.email, order.phone, order.status].join(" ").toLowerCase();
+        const statusMatch = status === "all" || order.status === status;
+        return statusMatch && (!term || haystack.includes(term));
+      });
+    }
+
+    function renderCustomers(orders) {
+      const byContact = new Map();
+      orders.forEach((order) => {
+        const id = (order.email || order.customer || order.phone || order.reference || "").toLowerCase();
+        if (!id) return;
+        const existing = byContact.get(id) || { customer: order.customer, email: order.email, phone: order.phone, orders: 0, total: 0, last: order.createdAt };
+        existing.orders += 1;
+        existing.total += Number(order.total || 0);
+        if (order.createdAt && (!existing.last || new Date(order.createdAt) > new Date(existing.last))) existing.last = order.createdAt;
+        byContact.set(id, existing);
+      });
+      const customers = [...byContact.values()];
+      $("customerCount").textContent = `${customers.length} total`;
+      if (!customers.length) {
+        $("customersTable").innerHTML = `<div class="empty-state"><div><strong>No customer records yet.</strong><br><span>Customer details will be created from submitted orders.</span></div></div>`;
+        return;
+      }
+      $("customersTable").innerHTML = `
+        <table class="customers-table">
+          <thead><tr><th>Customer</th><th>Contact</th><th>Orders</th><th>Lifetime value</th><th>Last order</th></tr></thead>
+          <tbody>
+            ${customers.map((customer) => `
+              <tr>
+                <td><strong>${clean(customer.customer)}</strong></td>
+                <td>${clean(customer.email || "No email")}<br><span class="owner-muted">${clean(customer.phone || "No phone")}</span></td>
+                <td>${customer.orders}</td>
+                <td><strong>${money(customer.total)}</strong></td>
+                <td>${customer.last ? clean(new Date(customer.last).toLocaleDateString("en-ZA")) : "Pending"}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderTimeline(orders) {
+      const counts = statuses.map((status) => [status, orders.filter((order) => order.status === status).length]);
+      $("timeline").innerHTML = counts.map(([status, count]) => `
+        <div class="timeline-item ${count ? "done" : ""}">
+          <span class="timeline-dot"></span>
+          <div><strong>${clean(status)}</strong><br><span class="owner-muted">${count} order${count === 1 ? "" : "s"}</span></div>
+        </div>
+      `).join("");
+    }
+
+    function render() {
+      const orders = readOrders();
+      renderMetrics(orders);
+      renderTimeline(orders);
+      renderPriorityOrders("actionOrders", orders.filter((order) => order.status !== "Delivered"), 5);
+      renderOrdersTable("ordersTable", filteredOrders());
+      renderCustomers(orders);
+      $("orderCount").textContent = `${filteredOrders().length} shown`;
+    }
+
+    function openOrder(order) {
+      $("drawerTitle").textContent = order.reference || "Order";
+      $("drawerStatus").innerHTML = `<span class="${statusClass(order.status)}">${clean(order.status)}</span>`;
+      $("drawerContent").innerHTML = `
+        <div class="detail-list">
+          <div class="detail-row"><span>Customer</span><strong>${clean(order.customer)}</strong></div>
+          <div class="detail-row"><span>Email</span><strong>${clean(order.email || "Not supplied")}</strong></div>
+          <div class="detail-row"><span>Phone</span><strong>${clean(order.phone || "Not supplied")}</strong></div>
+          <div class="detail-row"><span>Total</span><strong>${money(order.total)}</strong></div>
+          <div class="detail-row"><span>Items</span><strong>${clean(itemSummary(order))}</strong></div>
+          <div class="detail-row"><span>Proof file</span><strong>${clean(order.proofName || "Not attached")}</strong></div>
+          <div class="detail-row"><span>Fulfilment note</span><strong>${clean(order.fulfilmentNote || "Not added")}</strong></div>
+          <div class="detail-row"><span>Notes</span><strong>${clean(order.notes || "No notes")}</strong></div>
+        </div>
+        <div class="detail-actions">
+          <button class="owner-btn primary" type="button" data-action-order="${clean(order.reference || order.id)}">${clean(nextAction(order))}</button>
+        </div>
+        <p class="owner-muted" style="margin-top: 14px;">Use this panel to verify EFT payments and move each order through the manual fulfilment flow.</p>
+      `;
+      $("detailBackdrop").classList.add("open");
+      $("orderDrawer").classList.add("open");
+    }
+
+    function closeOrder() {
+      $("detailBackdrop").classList.remove("open");
+      $("orderDrawer").classList.remove("open");
+    }
+
+    function orderById(id) {
+      return readOrders().find((order) => (order.reference || order.id) === id);
+    }
+
+    function setView(view) {
+      document.querySelectorAll("[data-view-link]").forEach((button) => button.classList.toggle("active", button.dataset.viewLink === view));
+      document.querySelectorAll(".view").forEach((panel) => panel.classList.toggle("active", panel.id === `view-${view}`));
+      const [eyebrow, heading, copy] = viewMeta[view] || viewMeta.overview;
+      $("viewEyebrow").textContent = eyebrow;
+      $("viewHeading").textContent = heading;
+      $("viewCopy").textContent = copy;
+    }
+
+    localStorage.setItem(pinKey, "1410");
+    if (!localStorage.getItem(orderKey)) saveOrders(demoOrders);
+
+    $("loginForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      if ($("pin").value === localStorage.getItem(pinKey)) {
+        $("login").classList.add("hidden");
+        $("app").classList.remove("hidden");
+        render();
+      } else {
+        $("loginError").textContent = "That PIN is not correct.";
+      }
+    });
+
+    $("logoutBtn").addEventListener("click", () => window.location.reload());
+    $("closeDrawer").addEventListener("click", closeOrder);
+    $("detailBackdrop").addEventListener("click", closeOrder);
+    $("orderSearch").addEventListener("input", render);
+    $("statusFilter").addEventListener("change", render);
+
+    $("pinForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      const currentPin = String(form.get("currentPin") || "");
+      const newPin = String(form.get("newPin") || "");
+      if (currentPin !== localStorage.getItem(pinKey)) {
+        $("pinMessage").textContent = "Current PIN is incorrect.";
+        return;
+      }
+      if (!/^\d{4}$/.test(newPin)) {
+        $("pinMessage").textContent = "New PIN must be exactly 4 digits.";
+        return;
+      }
+      localStorage.setItem(pinKey, newPin);
+      event.currentTarget.reset();
+      $("pinMessage").textContent = "PIN updated.";
+    });
+
+    document.addEventListener("click", (event) => {
+      const viewButton = event.target.closest("[data-view-link]");
+      const row = event.target.closest("[data-open-order]");
+      const actionButton = event.target.closest("[data-action-order]");
+
+      if (viewButton) setView(viewButton.dataset.viewLink);
+      if (row && !actionButton) {
+        const order = orderById(row.dataset.openOrder);
+        if (order) openOrder(order);
+      }
+      if (actionButton) {
+        const order = orderById(actionButton.dataset.actionOrder);
+        if (order && order.status !== "Delivered") lifecycleAction(order);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeOrder();
+    });
+  </script>
+</body>
+</html>

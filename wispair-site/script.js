@@ -206,6 +206,7 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
     "",
     `Total: ${money(cartTotal())}`,
     `Name: ${form.get("name")}`,
+    `Email: ${form.get("email")}`,
     `Phone: ${form.get("phone")}`,
     `Delivery / collection notes: ${form.get("notes") || "Not provided"}`
   ];
@@ -219,10 +220,17 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
   }
   summary.textContent = message;
 
-  // Save order details and open the mock payment page
+  const reference = `WSP-${Date.now().toString(36).toUpperCase().slice(-6)}`;
   try {
-    localStorage.setItem("wispair-order-message", message);
-    localStorage.setItem("wispair-order-data", JSON.stringify(items));
+    localStorage.setItem("wispair-order-draft", JSON.stringify({
+      reference,
+      items,
+      total: cartTotal(),
+      customer: form.get("name"),
+      email: form.get("email"),
+      phone: form.get("phone"),
+      notes: form.get("notes") || ""
+    }));
     window.location.href = "payment.html";
   } catch (err) {
     showToast("Unable to start payment. Please try again.");
@@ -230,28 +238,3 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
 });
 
 renderCart();
-
-// If returning from payment page, check payment status
-let paymentStatus = null;
-try {
-  paymentStatus = localStorage.getItem("wispair-payment-status");
-} catch (e) {}
-if (paymentStatus === "success") {
-  showToast("Payment successful. Order placed.");
-  localStorage.removeItem("wispair-payment-status");
-  // copy order message to clipboard and open Instagram for final send
-  const orderMsg = localStorage.getItem("wispair-order-message");
-  if (orderMsg && navigator.clipboard) {
-    navigator.clipboard.writeText(orderMsg).catch(() => {});
-  }
-  window.open("https://www.instagram.com/wispairofficial/", "_blank", "noopener");
-  // clear cart and order data
-  cart = {};
-  saveCart();
-  renderCart();
-  localStorage.removeItem("wispair-order-message");
-  localStorage.removeItem("wispair-order-data");
-} else if (paymentStatus === "failed") {
-  showToast("Payment failed. Please try again.");
-  localStorage.removeItem("wispair-payment-status");
-}

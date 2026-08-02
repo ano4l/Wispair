@@ -1,34 +1,35 @@
-# Wispair Site — Local dev & Vercel deploy
+# Wispair Site - Local dev & Vercel deploy
 
-This folder contains the static Wispair site and a mock payment gateway for local testing.
+This folder contains the static Wispair site, manual EFT checkout, and owner dashboard.
 
-Quick start (local preview with Vercel CLI):
+## Local preview
 
 ```bash
-# install vercel CLI if needed
 npm i -g vercel
-
-# run local dev server from this folder
 cd wispair-site
 vercel dev
 ```
 
-Deploy to Vercel (one-off):
+## Production deploy
 
 ```bash
 cd wispair-site
 vercel --prod
 ```
 
-Force push to the provided GitHub repository (WARNING: this rewrites history):
+## Owner dashboard
 
-```bash
-# from the repository root
-git remote add target https://github.com/VKTClients/Wispair.git
-# Verify the remote is correct, then force push (OVERWRITE remote history)
-git push --force target main
-```
+- Dashboard page: `owner.html` or `/owner` on Vercel
+- Default owner PIN: `1410`
+- Demo orders are seeded for Ruva when the browser has no existing `wispair-orders` data.
 
-Notes:
-- The mock payment page is `payment.html`. It simulates a payment and on success returns to the site, copies the order message to clipboard, and opens Instagram.
-- Vercel will serve the static files directly. The `package.json` includes convenience scripts but is optional.
+## Manual EFT checkout
+
+The payment page displays:
+
+- Bank: FNB
+- Account number: 62793660103
+- Branch code: 250655
+- Personalized `WSP-...` reference generated per order
+
+Orders are stored in browser `localStorage` for this static demo and appear in the owner dashboard for payment review.

@@ -903,7 +903,18 @@ h3 {
   box-shadow: var(--shadow);
 }
 
-.about-photo img,
+.about-photo {
+  aspect-ratio: 746 / 1030;
+  max-height: 640px;
+}
+
+.about-photo img {
+  min-height: 0;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
 .bundle-photo img {
   min-height: 420px;
 }

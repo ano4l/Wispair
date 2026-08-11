@@ -840,11 +840,12 @@ h3 {
 }
 
 .strip-card .product-image {
-  aspect-ratio: 642 / 290;
+  aspect-ratio: 4 / 5;
 }
 
 .strip-card .product-image img {
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center;
 }
 
 .product-body {

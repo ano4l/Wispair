@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order received | WISPAIR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body.confirmation-body { min-height: 100dvh; background: linear-gradient(180deg,#fff 0,#f8f3f6 100%); color:#1d1b20; }
+    .confirmation-nav,.confirmation-page { width:min(760px,calc(100% - 36px)); margin:0 auto; }
+    .confirmation-nav { min-height:76px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #e7e1e5; }
+    .confirmation-brand { font-family:var(--display); color:#100b0e; font-size:1.8rem; letter-spacing:.04em; }
+    .confirmation-nav a:last-child { color:#655b62; font-size:.78rem; font-weight:900; text-transform:uppercase; letter-spacing:.05em; }
+    .confirmation-page { padding:72px 0 100px; }
+    .confirmation-card { background:#fff; border:1px solid #e7e1e5; border-radius:18px; padding:clamp(24px,6vw,54px); box-shadow:0 22px 70px rgba(23,19,32,.08); }
+    .confirmation-mark { width:54px; height:54px; display:grid; place-items:center; border-radius:50%; background:#effaf3; color:#1d6c3f; font-size:1.6rem; font-weight:900; }
+    .confirmation-card h1 { margin:22px 0 12px; color:#100b0e; font-size:clamp(2.2rem,7vw,4.5rem); line-height:.98; }
+    .confirmation-card p { color:#71686e; line-height:1.65; max-width:58ch; }
+    .confirmation-reference { margin:28px 0; padding:20px; border-radius:14px; background:#fff8fc; border:1px solid #ead5df; }
+    .confirmation-reference span { display:block; color:#756b72; font-size:.75rem; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
+    .confirmation-reference strong { display:block; margin-top:8px; color:#100b0e; font-family:var(--display); font-size:2rem; letter-spacing:.05em; }
+    .confirmation-steps { display:grid; gap:16px; margin:28px 0 0; padding:0; list-style:none; }
+    .confirmation-steps li { display:grid; grid-template-columns:32px 1fr; gap:12px; align-items:start; color:#4b4248; line-height:1.5; }
+    .confirmation-steps b { display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:#100b0e; color:#fff; font-size:.78rem; }
+    .confirmation-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:32px; }
+    .confirmation-actions a { min-height:46px; display:inline-flex; align-items:center; justify-content:center; padding:10px 16px; border:1px solid #d8d0d5; border-radius:10px; color:#201b20; font-size:.8rem; font-weight:900; text-decoration:none; }
+    .confirmation-actions a.primary { background:#100b0e; border-color:#100b0e; color:#fff; }
+    @media(max-width:560px){ .confirmation-actions a { width:100%; } }
+  </style>
+</head>
+<body class="confirmation-body">
+  <nav class="confirmation-nav"><a class="confirmation-brand" href="index.html">WISPAIR</a><a href="index.html">Back to store</a></nav>
+  <main class="confirmation-page">
+    <article class="confirmation-card">
+      <div class="confirmation-mark" aria-hidden="true">✓</div>
+      <p class="eyebrow">Order received</p>
+      <h1>We’ve got it.</h1>
+      <p>Your order is now in payment review. Keep your reference handy while we match the EFT and prepare your fulfilment update.</p>
+      <div class="confirmation-reference"><span>Your order reference</span><strong id="reference">—</strong></div>
+      <ol class="confirmation-steps">
+        <li><b>1</b><span>Make sure your EFT uses the reference above exactly.</span></li>
+        <li><b>2</b><span>WISPAIR verifies the payment and confirms your order.</span></li>
+        <li><b>3</b><span>You’ll receive an email update when your order is ready for delivery or collection.</span></li>
+      </ol>
+      <div class="confirmation-actions"><a class="primary" href="index.html">Continue shopping</a><a href="payment.html">Back to payment details</a></div>
+    </article>
+  </main>
+  <script>
+    const reference = new URLSearchParams(window.location.search).get("reference");
+    document.getElementById("reference").textContent = reference || "Your WSP reference";
+  </script>
+</body>
+</html>

@@ -83,6 +83,15 @@
       padding: 52px 0 88px;
     }
 
+    .checkout-progress {
+      height: 4px;
+      background: #eee8ec;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 0 34px;
+    }
+    .checkout-progress span { display: block; width: 66%; height: 100%; background: #c23d8d; border-radius: inherit; }
+
     .payment-head {
       max-width: 760px;
       display: grid;
@@ -284,6 +293,8 @@
     .order-item-list { display: grid; gap: 8px; margin: 16px 0; }
     .order-item { display: flex; justify-content: space-between; gap: 16px; color: #4b4248; font-size: .9rem; }
     .secure-note { display: flex; gap: 10px; margin-top: 18px; padding: 14px; border-radius: 12px; background: #f7f4f6; color: #655b62; font-size: .82rem; line-height: 1.5; }
+    .edit-details { display: inline-flex; margin-top: 12px; color: #9d2d70; font-size: .82rem; font-weight: 900; text-decoration: underline; text-underline-offset: 3px; }
+    .confirmation-link { display: block; margin-top: 8px; color: #1d5c38; font-size: .82rem; font-weight: 800; }
     .bank-card { position: sticky; top: 24px; }
 
     @media (max-width: 860px) {
@@ -334,18 +345,19 @@
   </header>
 
   <main class="payment-page">
+    <div class="checkout-progress" aria-label="Checkout progress"><span></span></div>
     <section class="payment-head">
       <a class="eyebrow" href="index.html">Back to store</a>
       <span class="checkout-kicker">Secure order review</span>
-      <h1>Pay by bank transfer.</h1>
-      <p class="payment-muted">Use your unique reference exactly as shown. The owner verifies the EFT and confirms the order once the payment is matched.</p>
+      <h1>Review your order, then pay by EFT.</h1>
+      <p class="payment-muted">Your order is reserved while you make the transfer. Use the exact reference below so WISPAIR can match your payment quickly.</p>
       <div class="checkout-trust"><span>Unique payment reference</span><span>Owner-verified EFT</span><span>Email order updates</span></div>
     </section>
 
     <div class="payment-grid">
       <section class="payment-card">
         <div class="card-head">
-          <h2>Your payment reference</h2>
+          <h2>Order review & payment</h2>
           <span class="payment-muted" id="orderState">Pending payment</span>
         </div>
 
@@ -438,17 +450,18 @@
           <label class="payment-label">Email for order updates
             <input class="payment-field" name="email" type="email" required autocomplete="email" value="${clean(data.email || "")}" placeholder="you@example.com">
           </label>
-          <label class="payment-label">Proof of payment reference or note
-            <input class="payment-field" name="proofNote" placeholder="Example: bank notification sent, PDF uploaded separately">
+          <label class="payment-label">Payment note (optional)
+            <input class="payment-field" name="proofNote" placeholder="Example: proof sent by WhatsApp">
           </label>
           <label class="payment-label">Proof file name for owner reference (optional)
             <input class="payment-field" name="proof" type="file" accept="image/*,.pdf">
           </label>
           <p class="payment-muted" style="margin: -4px 0 14px;">This checkout records the selected file name only. Send the actual proof through your usual WISPAIR contact channel if requested.</p>
-          <button class="payment-btn primary" type="submit" id="submitOrder">Submit for owner review</button>
+          <button class="payment-btn primary" type="submit" id="submitOrder">I’ve paid — submit order</button>
           <div class="submit-status" id="submitStatus" aria-live="polite"></div>
         </form>
-        <div class="secure-note"><strong>What happens next</strong><span>Your order enters payment review. The owner matches the EFT reference, confirms the order, and sends fulfilment updates by email.</span></div>
+        <a class="edit-details" href="index.html">Need to change something? Return to your order details</a>
+        <div class="secure-note"><strong>What happens next</strong><span>We’ll review the EFT, confirm your order, and send fulfilment updates to your email. No account is required.</span></div>
         <div id="result"></div>
       `;
 
@@ -499,11 +512,14 @@
           <div class="success-box">
             <strong>Payment submitted for review.</strong><br>
             Keep ${clean(reference)} handy. The owner will confirm the order after matching the bank transfer.${persisted ? " Your order has been securely recorded." : " Your order is saved on this device while online order storage is being configured."}
+            <a class="confirmation-link" href="order-confirmation.html?reference=${encodeURIComponent(reference)}">View your order confirmation →</a>
           </div>
           <div class="payment-actions">
-            <a class="payment-btn primary" href="index.html">Return to store</a>
+            <a class="payment-btn primary" href="order-confirmation.html?reference=${encodeURIComponent(reference)}">Continue to confirmation</a>
+            <a class="payment-btn" href="index.html">Return to store</a>
           </div>
         `;
+        window.setTimeout(() => { window.location.href = `order-confirmation.html?reference=${encodeURIComponent(reference)}`; }, 900);
       });
     }
 

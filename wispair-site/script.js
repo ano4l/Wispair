@@ -126,7 +126,13 @@ function renderCart() {
 
   const savings = bundleSavings();
   cartTotalEl.textContent = money(cartTotal());
-  const existingSavings = document.querySelector("[data-cart-savings]");
+  let existingSavings = document.querySelector("[data-cart-savings]");
+  if (!existingSavings && cartTotalEl.parentElement) {
+    existingSavings = document.createElement("div");
+    existingSavings.className = "cart-savings";
+    existingSavings.dataset.cartSavings = "";
+    cartTotalEl.parentElement.insertAdjacentElement("afterend", existingSavings);
+  }
   if (existingSavings) existingSavings.textContent = savings ? `Bundle saving: ${money(savings)}` : "";
 }
 

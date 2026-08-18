@@ -1022,6 +1022,15 @@ h3 {
   gap: 14px;
 }
 
+.cart-savings {
+  min-height: 20px;
+  margin: -10px 0 18px;
+  color: var(--rose-dark);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-align: right;
+}
+
 .drawer-content {
   overflow: auto;
   padding-right: 4px;

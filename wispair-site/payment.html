@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Complete your order | WISPAIR</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%23100b0e%22/><text x=%2232%22 y=%2243%22 text-anchor=%22middle%22 font-size=%2234%22 font-family=%22Arial%22 font-weight=%22900%22 fill=%22%23faa1d4%22>W</text></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
   <script>
     (function () {
@@ -18,8 +19,8 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     body.payment-body {
-      min-height: 100vh;
-      background: #f6f6f7;
+      min-height: 100dvh;
+      background: linear-gradient(180deg, #fff 0, #f7f4f6 42%, #f1edf0 100%);
       color: #1d1b20;
     }
 
@@ -79,7 +80,7 @@
     }
 
     .payment-page {
-      padding: 44px 0 72px;
+      padding: 52px 0 88px;
     }
 
     .payment-head {
@@ -104,16 +105,16 @@
     .payment-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.12fr) minmax(340px, 0.78fr);
-      gap: 18px;
+      gap: 24px;
       align-items: start;
     }
 
     .payment-card {
       background: #fff;
       border: 1px solid #e7e1e5;
-      border-radius: 8px;
-      box-shadow: 0 18px 45px rgba(23, 19, 32, 0.08);
-      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 22px 70px rgba(23, 19, 32, 0.08);
+      padding: clamp(20px, 3vw, 30px);
     }
 
     .payment-card h2 {
@@ -139,9 +140,9 @@
       gap: 14px;
       padding: 16px;
       border: 1px solid #ead5df;
-      border-radius: 8px;
-      background: #fff7fb;
-      margin-bottom: 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fff8fc, #fff);
+      margin-bottom: 20px;
     }
 
     .reference-code {
@@ -165,9 +166,9 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
+      min-height: 46px;
       border: 1px solid #d8d0d5;
-      border-radius: 8px;
+      border-radius: 10px;
       background: #fff;
       color: #201b20;
       padding: 10px 13px;
@@ -187,14 +188,18 @@
       color: #fff;
     }
 
+    .payment-btn:active { transform: translateY(1px); }
+    .payment-btn:disabled { cursor: wait; opacity: .65; }
+
     .payment-field,
     .payment-textarea {
       width: 100%;
       border: 1px solid #ddd5da;
-      border-radius: 8px;
+      border-radius: 10px;
       background: #fff;
       color: #171219;
-      padding: 11px 12px;
+      min-height: 48px;
+      padding: 12px 14px;
       outline: none;
       margin-top: 7px;
     }
@@ -271,10 +276,22 @@
       margin-top: 18px;
     }
 
+    .checkout-kicker { color: #9d2d70; font-size: .72rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .checkout-trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; overflow: hidden; margin: 26px 0 0; border: 1px solid #e7e1e5; border-radius: 14px; background: #e7e1e5; }
+    .checkout-trust span { padding: 14px; background: rgba(255,255,255,.88); color: #655b62; font-size: .78rem; font-weight: 800; text-align: center; }
+    .submit-status { min-height: 20px; margin-top: 10px; color: #71686e; font-size: .82rem; font-weight: 700; }
+    .submit-status.error { color: #9c274c; }
+    .order-item-list { display: grid; gap: 8px; margin: 16px 0; }
+    .order-item { display: flex; justify-content: space-between; gap: 16px; color: #4b4248; font-size: .9rem; }
+    .secure-note { display: flex; gap: 10px; margin-top: 18px; padding: 14px; border-radius: 12px; background: #f7f4f6; color: #655b62; font-size: .82rem; line-height: 1.5; }
+    .bank-card { position: sticky; top: 24px; }
+
     @media (max-width: 860px) {
       .payment-grid {
         grid-template-columns: 1fr;
       }
+
+      .bank-card { position: static; }
 
       .payment-nav {
         align-items: flex-start;
@@ -299,6 +316,8 @@
       .payment-btn {
         width: 100%;
       }
+
+      .checkout-trust { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -317,8 +336,10 @@
   <main class="payment-page">
     <section class="payment-head">
       <a class="eyebrow" href="index.html">Back to store</a>
+      <span class="checkout-kicker">Secure order review</span>
       <h1>Pay by bank transfer.</h1>
       <p class="payment-muted">Use your unique reference exactly as shown. The owner verifies the EFT and confirms the order once the payment is matched.</p>
+      <div class="checkout-trust"><span>Unique payment reference</span><span>Owner-verified EFT</span><span>Email order updates</span></div>
     </section>
 
     <div class="payment-grid">
@@ -331,7 +352,7 @@
         <div id="checkoutContent"></div>
       </section>
 
-      <aside class="payment-card">
+      <aside class="payment-card bank-card">
         <div class="card-head">
           <h2>WISPAIR banking details</h2>
         </div>
@@ -406,8 +427,9 @@
           <div class="line-row"><span>Email</span><strong>${clean(data.email || "Not supplied")}</strong></div>
           <div class="line-row"><span>Phone</span><strong>${clean(data.phone || "Not supplied")}</strong></div>
           <div class="line-row"><span>Total due</span><strong>${money(data.total)}</strong></div>
-          <div class="line-row"><span>Items</span><strong>${clean(items.map((item) => `${item.qty || 1} x ${item.name || "Item"}`).join(", ") || "No items")}</strong></div>
         </div>
+        <div class="order-item-list">${items.map((item) => `<div class="order-item"><span>${clean(item.qty || 1)} × ${clean(item.name || "Item")}</span><strong>${money(Number(item.price || 0) * Number(item.qty || 1))}</strong></div>`).join("")}</div>
+        ${Number(data.discount || 0) > 0 ? `<div class="line-row"><span>Bundle saving</span><strong>−${money(data.discount)}</strong></div>` : ""}
 
         <form id="paymentForm" style="margin-top: 18px;">
           <label class="payment-label">Account holder name
@@ -422,9 +444,11 @@
           <label class="payment-label">Proof file name for owner reference (optional)
             <input class="payment-field" name="proof" type="file" accept="image/*,.pdf">
           </label>
-          <p class="payment-muted" style="margin: -4px 0 14px;">This checkout records the selected file name only for owner reference.</p>
-          <button class="payment-btn primary" type="submit">Submit for owner review</button>
+          <p class="payment-muted" style="margin: -4px 0 14px;">This checkout records the selected file name only. Send the actual proof through your usual WISPAIR contact channel if requested.</p>
+          <button class="payment-btn primary" type="submit" id="submitOrder">Submit for owner review</button>
+          <div class="submit-status" id="submitStatus" aria-live="polite"></div>
         </form>
+        <div class="secure-note"><strong>What happens next</strong><span>Your order enters payment review. The owner matches the EFT reference, confirms the order, and sends fulfilment updates by email.</span></div>
         <div id="result"></div>
       `;
 
@@ -435,7 +459,15 @@
 
       document.getElementById("paymentForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        const form = new FormData(event.currentTarget);
+        const formElement = event.currentTarget;
+        const submitButton = formElement.querySelector("[type='submit']");
+        const submitStatus = document.getElementById("submitStatus");
+        if (submitButton.disabled) return;
+        submitButton.disabled = true;
+        submitButton.textContent = "Submitting order…";
+        submitStatus.className = "submit-status";
+        submitStatus.textContent = "Saving your order for owner review.";
+        const form = new FormData(formElement);
         const orders = readOrders();
         const order = {
           ...data,
@@ -455,16 +487,18 @@
           persisted = response.ok;
         } catch (error) {}
 
-        orders.unshift(order);
-        localStorage.setItem(ordersKey, JSON.stringify(orders));
+        const existingIndex = orders.findIndex((candidate) => candidate.reference === reference);
+        if (existingIndex >= 0) orders[existingIndex] = order;
+        else orders.unshift(order);
+        try { localStorage.setItem(ordersKey, JSON.stringify(orders)); } catch (error) {}
         localStorage.removeItem(draftKey);
         localStorage.removeItem("wispair-order");
-        event.currentTarget.remove();
+        formElement.remove();
         document.getElementById("orderState").textContent = "Submitted";
         document.getElementById("result").innerHTML = `
           <div class="success-box">
             <strong>Payment submitted for review.</strong><br>
-            Keep ${clean(reference)} handy. The owner will confirm the order after matching the bank transfer.${persisted ? " Your order has been securely recorded." : ""}
+            Keep ${clean(reference)} handy. The owner will confirm the order after matching the bank transfer.${persisted ? " Your order has been securely recorded." : " Your order is saved on this device while online order storage is being configured."}
           </div>
           <div class="payment-actions">
             <a class="payment-btn primary" href="index.html">Return to store</a>

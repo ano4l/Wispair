@@ -74,8 +74,19 @@ function cartCount() {
   return Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
 }
 
+function bundleSavings() {
+  const clusterQty = Object.entries(cart)
+    .filter(([id]) => products[id]?.price === 350 && id !== "bundle")
+    .reduce((sum, [, item]) => sum + item.qty, 0);
+  const stripQty = Object.entries(cart)
+    .filter(([id]) => products[id]?.price === 120)
+    .reduce((sum, [, item]) => sum + item.qty, 0);
+  return Math.min(clusterQty, Math.floor(stripQty / 2)) * 40;
+}
+
 function cartTotal() {
-  return Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0);
+  const subtotal = Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0);
+  return subtotal - bundleSavings();
 }
 
 function showToast(message) {
@@ -113,7 +124,10 @@ function renderCart() {
     `).join("");
   }
 
+  const savings = bundleSavings();
   cartTotalEl.textContent = money(cartTotal());
+  const existingSavings = document.querySelector("[data-cart-savings]");
+  if (existingSavings) existingSavings.textContent = savings ? `Bundle saving: ${money(savings)}` : "";
 }
 
 function openDrawer() {
@@ -204,7 +218,7 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
     "",
     ...items.map((item) => `${item.qty} x ${item.name} - ${money(item.price * item.qty)}`),
     "",
-    `Total: ${money(cartTotal())}`,
+    `Total: ${money(cartTotal())}${bundleSavings() ? ` (bundle saving: ${money(bundleSavings())})` : ""}`,
     `Name: ${form.get("name")}`,
     `Email: ${form.get("email")}`,
     `Phone: ${form.get("phone")}`,
@@ -225,6 +239,8 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
     localStorage.setItem("wispair-order-draft", JSON.stringify({
       reference,
       items,
+      subtotal: Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0),
+      discount: bundleSavings(),
       total: cartTotal(),
       customer: form.get("name"),
       email: form.get("email"),

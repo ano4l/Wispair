@@ -433,7 +433,7 @@
         document.getElementById("copyNote").textContent = "Reference copied.";
       });
 
-      document.getElementById("paymentForm").addEventListener("submit", (event) => {
+      document.getElementById("paymentForm").addEventListener("submit", async (event) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         const orders = readOrders();
@@ -449,6 +449,12 @@
           proofNote: form.get("proofNote") || ""
         };
 
+        let persisted = false;
+        try {
+          const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(order) });
+          persisted = response.ok;
+        } catch (error) {}
+
         orders.unshift(order);
         localStorage.setItem(ordersKey, JSON.stringify(orders));
         localStorage.removeItem(draftKey);
@@ -458,7 +464,7 @@
         document.getElementById("result").innerHTML = `
           <div class="success-box">
             <strong>Payment submitted for review.</strong><br>
-            Keep ${clean(reference)} handy. The owner will confirm the order after matching the bank transfer.
+            Keep ${clean(reference)} handy. The owner will confirm the order after matching the bank transfer.${persisted ? " Your order has been securely recorded." : ""}
           </div>
           <div class="payment-actions">
             <a class="payment-btn primary" href="index.html">Return to store</a>

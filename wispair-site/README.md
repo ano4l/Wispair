@@ -32,4 +32,18 @@ The payment page displays:
 - Branch code: 250655
 - Personalized `WSP-...` reference generated per order
 
-Orders are stored in browser `localStorage` for this static demo and appear in the owner dashboard for payment review.
+Orders are submitted to `/api/orders`, persisted in Supabase, and notify the owner through Resend when the Vercel environment variables are configured. Browser `localStorage` remains a graceful local fallback.
+
+## Production environment variables
+
+Set these in Vercel:
+
+```text
+SUPABASE_URL=https://<project>.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<server-only-service-role-key>
+RESEND_API_KEY=<resend-key>
+ORDER_EMAIL_TO=<owner-email>
+ORDER_EMAIL_FROM=WISPAIR <orders@your-verified-domain.com>
+```
+
+Run `supabase/schema.sql` in the Supabase SQL editor before deploying.

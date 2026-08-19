@@ -345,6 +345,22 @@ textarea {
   letter-spacing: 0.02em;
 }
 
+.mobile-cart-btn {
+  display: none !important;
+  position: relative;
+}
+
+.mobile-cart-btn .cart-count {
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  font-size: 0.58rem;
+  line-height: 16px;
+}
+
 /* Custom Widescreen Hero with absolute overlay menu and overlapping brand seam */
 .hero {
   position: relative;
@@ -1197,6 +1213,10 @@ footer {
 
   .mobile-logo-link {
     display: block;
+  }
+
+  .mobile-cart-btn {
+    display: inline-flex !important;
   }
 
   /* Meet 44x44 minimum touch target size */

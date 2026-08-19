@@ -1,5 +1,11 @@
 const money = (value) => `R${Number(value || 0).toFixed(2)}`;
 
+const statusEmailTemplates = {
+  "Order confirmed": "confirmed",
+  "On its way": "on_the_way",
+  Delivered: "delivered"
+};
+
 const itemsText = (order) => (order.items || []).map((item) => `${item.qty || 1} x ${item.name || "WISPAIR item"}`).join("\n");
 
 const templates = {
@@ -11,10 +17,15 @@ const templates = {
 
 async function sendEmail(order, templateName, recipient) {
   const { RESEND_API_KEY, ORDER_EMAIL_FROM } = process.env;
-  if (!RESEND_API_KEY || !ORDER_EMAIL_FROM || !recipient) return false;
-  const email = templates[templateName](order);
-  const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({ from: ORDER_EMAIL_FROM, to: [recipient], subject: email.subject, text: email.text, html: email.html }) });
-  return response.ok;
+  const template = templates[templateName];
+  if (!RESEND_API_KEY || !ORDER_EMAIL_FROM || !recipient || !template) return false;
+  try {
+    const email = template(order);
+    const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({ from: ORDER_EMAIL_FROM, to: [recipient], subject: email.subject, text: email.text, html: email.html }) });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
 }
 
-module.exports = { templates, sendEmail };
+module.exports = { templates, statusEmailTemplates, sendEmail };

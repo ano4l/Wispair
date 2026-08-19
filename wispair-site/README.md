@@ -34,6 +34,13 @@ The payment page displays:
 
 Orders are submitted to `/api/orders`, persisted in Supabase, and notify the owner through Resend when the Vercel environment variables are configured. Browser `localStorage` remains a graceful local fallback.
 
+### Order email routes and templates
+
+- `POST /api/orders` sends the `submitted` template to the customer and `ORDER_EMAIL_TO`.
+- `POST /api/order-status` accepts `Order confirmed`, `On its way`, or `Delivered` and sends the matching customer update template.
+- Templates are defined in `api/_email-templates.js`: `submitted`, `confirmed`, `on_the_way`, and `delivered`.
+- Missing email configuration or a temporary Resend failure does not prevent the order/status response from completing; configure `RESEND_API_KEY` and a verified `ORDER_EMAIL_FROM` for delivery.
+
 ## Production environment variables
 
 Set these in Vercel:

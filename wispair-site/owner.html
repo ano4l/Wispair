@@ -990,11 +990,26 @@
       }
 
       const current = statuses.indexOf(orders[index].status);
-      orders[index].status = statuses[Math.min(current + 1, statuses.length - 1)];
+      const nextStatus = statuses[Math.min(current + 1, statuses.length - 1)];
+      orders[index].status = nextStatus;
       orders[index].updatedAt = new Date().toISOString();
       saveOrders(orders);
       render();
       openOrder(orders[index]);
+
+      // Trigger Resend email notification via order-status API
+      fetch("/api/order-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reference: orders[index].reference || orders[index].id,
+          status: nextStatus,
+          fulfilmentNote: orders[index].fulfilmentNote || "",
+          order: orders[index]
+        })
+      }).catch((err) => {
+        console.warn("Status update API sync notice:", err);
+      });
     }
 
     function renderMetrics(orders) {

@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Complete your order | WISPAIR</title>
+  <title>Payment details | WISPAIR</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%23100b0e%22/><text x=%2232%22 y=%2243%22 text-anchor=%22middle%22 font-size=%2234%22 font-family=%22Arial%22 font-weight=%22900%22 fill=%22%23faa1d4%22>W</text></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     (function () {
       try {
@@ -18,317 +20,693 @@
   </script>
   <link rel="stylesheet" href="styles.css">
   <style>
+    :root {
+      --pay-bg: #f8f6f8;
+      --pay-card: #ffffff;
+      --pay-text: #171316;
+      --pay-muted: #6b646a;
+      --pay-border: #e6dfe4;
+      --pay-border-light: #f0eaf0;
+      --pay-accent: #c23d8d;
+      --pay-accent-soft: #fdf2f8;
+      --pay-accent-border: #f5c4df;
+      --pay-dark: #100b0e;
+      --pay-success: #166534;
+      --pay-success-bg: #f0fdf4;
+      --pay-success-border: #bbf7d0;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+
     body.payment-body {
       min-height: 100dvh;
-      background: linear-gradient(180deg, #fff 0, #f7f4f6 42%, #f1edf0 100%);
-      color: #1d1b20;
+      background: var(--pay-bg);
+      color: var(--pay-text);
+      font-family: "Montserrat", sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: max(20px, env(safe-area-inset-bottom));
     }
 
     .payment-topbar {
-      border-bottom: 1px solid #e7e1e5;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(16px);
-    }
-
-    .payment-nav,
-    .payment-page {
-      width: min(1120px, calc(100% - 36px));
-      margin: 0 auto;
+      border-bottom: 1px solid var(--pay-border);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
 
     .payment-nav {
-      min-height: 72px;
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      min-height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      gap: 12px;
     }
 
     .payment-brand {
       font-family: var(--display);
-      color: #100b0e;
-      font-size: 1.8rem;
+      color: var(--pay-dark);
+      font-size: 1.45rem;
       letter-spacing: 0.04em;
+      text-decoration: none;
       line-height: 1;
     }
 
-    .payment-steps {
+    .payment-stepper {
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: #756b72;
-      font-size: 0.78rem;
-      font-weight: 900;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
     }
 
-    .payment-steps span {
+    .step-badge {
       display: inline-flex;
       align-items: center;
-      min-height: 28px;
+      gap: 4px;
+      padding: 4px 8px;
       border-radius: 999px;
-      padding: 5px 10px;
       background: #fff;
-      border: 1px solid #e7e1e5;
+      border: 1px solid var(--pay-border);
+      color: var(--pay-muted);
+      font-size: 0.68rem;
     }
 
-    .payment-steps .active {
-      background: #100b0e;
-      border-color: #100b0e;
+    .step-badge.done {
+      color: var(--pay-success);
+      border-color: var(--pay-success-border);
+      background: var(--pay-success-bg);
+    }
+
+    .step-badge.active {
+      background: var(--pay-dark);
+      border-color: var(--pay-dark);
       color: #fff;
     }
 
-    .payment-page {
-      padding: 52px 0 88px;
+    .payment-main {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 14px 0 28px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .checkout-progress {
-      height: 4px;
-      background: #eee8ec;
+    .payment-hero-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .payment-title-group h1 {
+      margin: 0;
+      font-family: var(--display);
+      color: var(--pay-dark);
+      font-size: clamp(1.3rem, 4.5vw, 1.85rem);
+      letter-spacing: 0.02em;
+      line-height: 1.15;
+    }
+
+    .payment-title-group p {
+      margin: 3px 0 0;
+      color: var(--pay-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .payment-guarantee-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
       border-radius: 999px;
-      overflow: hidden;
-      margin: 0 0 34px;
+      background: #fff;
+      border: 1px solid var(--pay-border);
+      color: var(--pay-muted);
+      font-size: 0.7rem;
+      font-weight: 700;
     }
-    .checkout-progress span { display: block; width: 66%; height: 100%; background: #c23d8d; border-radius: inherit; }
 
-    .payment-head {
-      max-width: 760px;
+    .payment-layout-grid {
       display: grid;
-      gap: 10px;
-      margin-bottom: 26px;
-    }
-
-    .payment-head h1 {
-      margin: 0;
-      color: #100b0e;
-      font-size: clamp(2rem, 4vw, 3.4rem);
-      line-height: 1;
-    }
-
-    .payment-muted {
-      color: #71686e;
-      margin: 0;
-    }
-
-    .payment-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.12fr) minmax(340px, 0.78fr);
-      gap: 24px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.15fr);
+      gap: 16px;
       align-items: start;
     }
 
-    .payment-card {
-      background: #fff;
-      border: 1px solid #e7e1e5;
-      border-radius: 16px;
-      box-shadow: 0 22px 70px rgba(23, 19, 32, 0.08);
-      padding: clamp(20px, 3vw, 30px);
-    }
-
-    .payment-card h2 {
-      margin: 0;
-      color: #100b0e;
-      font-size: 1.1rem;
-    }
-
-    .card-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-      padding-bottom: 14px;
-      border-bottom: 1px solid #eee8ec;
-      margin-bottom: 18px;
-    }
-
-    .reference-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 16px;
-      border: 1px solid #ead5df;
+    .pay-card {
+      background: var(--pay-card);
+      border: 1px solid var(--pay-border);
       border-radius: 14px;
-      background: linear-gradient(135deg, #fff8fc, #fff);
-      margin-bottom: 20px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(16, 11, 14, 0.04);
     }
 
-    .reference-code {
-      display: block;
-      color: #100b0e;
-      font-family: var(--display);
-      font-size: clamp(1.35rem, 4vw, 2.1rem);
-      line-height: 1;
-      letter-spacing: 0.04em;
-      word-break: break-word;
+    .card-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--pay-border-light);
+      margin-bottom: 12px;
     }
 
-    .copy-note {
-      min-height: 22px;
-      color: #1d6c3f;
-      font-size: 0.84rem;
+    .card-step-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.68rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--pay-accent);
+      background: var(--pay-accent-soft);
+      padding: 3px 7px;
+      border-radius: 5px;
+      border: 1px solid var(--pay-accent-border);
+    }
+
+    .card-header-row h2 {
+      margin: 0;
+      font-size: 0.98rem;
       font-weight: 800;
+      color: var(--pay-dark);
     }
 
-    .payment-btn {
+    /* Reference & Amount Highlight Banner */
+    .highlight-banner {
+      background: linear-gradient(135deg, #fff7fb 0%, #ffffff 100%);
+      border: 1.5px solid var(--pay-accent-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .banner-amount-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--pay-muted);
+      display: block;
+    }
+
+    .banner-amount-val {
+      font-family: var(--display);
+      font-size: clamp(1.35rem, 4vw, 1.75rem);
+      color: var(--pay-dark);
+      line-height: 1.1;
+      display: block;
+      margin-top: 1px;
+    }
+
+    .ref-highlight-box {
+      background: #fff;
+      border: 1.5px solid #ebd3e0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .ref-title {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #9d2d70;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+    }
+
+    .ref-code {
+      font-family: var(--display);
+      font-size: clamp(1.15rem, 3.8vw, 1.45rem);
+      letter-spacing: 0.04em;
+      color: var(--pay-dark);
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Bank Table */
+    .bank-info-grid {
+      display: grid;
+      gap: 6px;
+    }
+
+    .bank-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #faf8fa;
+      border: 1px solid #f0eaf0;
+      font-size: 0.82rem;
+    }
+
+    .bank-info-label {
+      color: var(--pay-muted);
+      font-weight: 700;
+      font-size: 0.76rem;
+    }
+
+    .bank-info-val {
+      font-weight: 800;
+      color: var(--pay-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Mobile Ergonomic Copy Buttons */
+    .btn-copy {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 46px;
-      border: 1px solid #d8d0d5;
-      border-radius: 10px;
-      background: #fff;
-      color: #201b20;
-      padding: 10px 13px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .payment-btn:hover {
-      background: #faf4f8;
-    }
-
-    .payment-btn.primary {
-      background: #100b0e;
-      border-color: #100b0e;
-      color: #fff;
-    }
-
-    .payment-btn:active { transform: translateY(1px); }
-    .payment-btn:disabled { cursor: wait; opacity: .65; }
-
-    .payment-field,
-    .payment-textarea {
-      width: 100%;
-      border: 1px solid #ddd5da;
-      border-radius: 10px;
-      background: #fff;
-      color: #171219;
-      min-height: 48px;
-      padding: 12px 14px;
-      outline: none;
-      margin-top: 7px;
-    }
-
-    .payment-field:focus,
-    .payment-textarea:focus {
-      border-color: #c23d8d;
-      box-shadow: 0 0 0 3px rgba(250, 161, 212, 0.22);
-    }
-
-    .payment-label {
-      display: block;
-      color: #4b4248;
-      font-size: 0.78rem;
-      font-weight: 900;
+      gap: 4px;
+      min-height: 34px;
+      padding: 0 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-top: 14px;
+      letter-spacing: 0.03em;
+      border-radius: 6px;
+      border: 1px solid var(--pay-border);
+      background: #fff;
+      color: var(--pay-dark);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: all 120ms ease;
     }
 
-    .order-lines,
-    .bank-lines {
+    .btn-copy:active {
+      transform: scale(0.97);
+    }
+
+    .btn-copy:hover {
+      background: var(--pay-accent-soft);
+      border-color: var(--pay-accent-border);
+      color: var(--pay-accent);
+    }
+
+    .btn-copy.copied {
+      background: var(--pay-success-bg);
+      border-color: var(--pay-success-border);
+      color: var(--pay-success);
+    }
+
+    /* Compact Order Summary Card inside right column */
+    .order-mini-summary {
+      background: #faf8fa;
+      border: 1px solid #f0eaf0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+    }
+
+    .summary-toggle-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      color: var(--pay-dark);
+      font-weight: 800;
+      user-select: none;
+      padding: 2px 0;
+    }
+
+    .summary-items-list {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--pay-border);
       display: grid;
-      gap: 10px;
-      margin: 16px 0 0;
+      gap: 5px;
     }
 
-    .line-row {
+    .summary-item-row {
       display: flex;
       justify-content: space-between;
-      gap: 18px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #eee8ec;
-      color: #4b4248;
-      font-size: 0.9rem;
+      color: var(--pay-muted);
+      font-size: 0.78rem;
     }
 
-    .line-row strong {
-      color: #100b0e;
-      text-align: right;
+    .summary-item-row strong {
+      color: var(--pay-dark);
     }
 
-    .bank-warning,
-    .success-box,
-    .empty-box {
-      border-radius: 8px;
-      padding: 14px;
-      font-size: 0.88rem;
-      margin-top: 16px;
-    }
-
-    .bank-warning {
-      border: 1px solid #eed4a1;
-      background: #fff7df;
-      color: #6b4a0f;
-    }
-
-    .success-box {
-      border: 1px solid #b8e5c8;
-      background: #effaf3;
-      color: #1d5c38;
-    }
-
-    .empty-box {
-      border: 1px dashed #d8d0d5;
+    /* Styled Drag & Drop / Mobile Tap Upload Zone */
+    .upload-zone {
+      position: relative;
+      border: 2px dashed #e2d6dd;
+      border-radius: 12px;
+      padding: 16px 12px;
+      text-align: center;
       background: #fff;
-      color: #71686e;
-    }
-
-    .payment-actions {
+      cursor: pointer;
+      transition: all 150ms ease;
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 18px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 12px;
+      touch-action: manipulation;
     }
 
-    .checkout-kicker { color: #9d2d70; font-size: .72rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
-    .checkout-trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; overflow: hidden; margin: 26px 0 0; border: 1px solid #e7e1e5; border-radius: 14px; background: #e7e1e5; }
-    .checkout-trust span { padding: 14px; background: rgba(255,255,255,.88); color: #655b62; font-size: .78rem; font-weight: 800; text-align: center; }
-    .submit-status { min-height: 20px; margin-top: 10px; color: #71686e; font-size: .82rem; font-weight: 700; }
-    .submit-status.error { color: #9c274c; }
-    .order-item-list { display: grid; gap: 8px; margin: 16px 0; }
-    .order-item { display: flex; justify-content: space-between; gap: 16px; color: #4b4248; font-size: .9rem; }
-    .secure-note { display: flex; gap: 10px; margin-top: 18px; padding: 14px; border-radius: 12px; background: #f7f4f6; color: #655b62; font-size: .82rem; line-height: 1.5; }
-    .edit-details { display: inline-flex; margin-top: 12px; color: #9d2d70; font-size: .82rem; font-weight: 900; text-decoration: underline; text-underline-offset: 3px; }
-    .confirmation-link { display: block; margin-top: 8px; color: #1d5c38; font-size: .82rem; font-weight: 800; }
-    .bank-card { position: sticky; top: 24px; }
+    .upload-zone:active,
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--pay-accent);
+      background: var(--pay-accent-soft);
+    }
 
-    @media (max-width: 860px) {
-      .payment-grid {
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+    }
+
+    .upload-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--pay-accent-soft);
+      color: var(--pay-accent);
+      display: grid;
+      place-items: center;
+      font-size: 1.15rem;
+    }
+
+    .upload-zone-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--pay-dark);
+      margin: 2px 0 0;
+    }
+
+    .upload-zone-hint {
+      font-size: 0.72rem;
+      color: var(--pay-muted);
+      margin: 0;
+    }
+
+    .upload-btn-fake {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 6px;
+      background: var(--pay-dark);
+      color: #fff;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      margin-top: 4px;
+    }
+
+    /* Uploaded File Selected State */
+    .file-selected-badge {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--pay-success-bg);
+      border: 1px solid var(--pay-success-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+
+    .file-selected-badge.active {
+      display: flex;
+    }
+
+    .file-selected-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .file-icon {
+      font-size: 1.2rem;
+      color: var(--pay-success);
+    }
+
+    .file-name-text {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--pay-dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+      display: block;
+    }
+
+    .file-size-text {
+      font-size: 0.68rem;
+      color: var(--pay-muted);
+      font-weight: 600;
+    }
+
+    .btn-remove-file {
+      background: none;
+      border: none;
+      color: #9d2635;
+      font-size: 0.74rem;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 4px;
+      text-decoration: underline;
+    }
+
+    /* Form Fields Mobile-Optimized (16px to prevent iOS zoom) */
+    .input-row-compact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .form-group-compact {
+      display: grid;
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+
+    .form-group-compact label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--pay-muted);
+    }
+
+    .form-control-compact {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--pay-border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--pay-dark);
+      padding: 0 10px;
+      font-size: 16px; /* 16px prevents iOS Safari auto zoom */
+      font-family: inherit;
+      outline: none;
+    }
+
+    .form-control-compact:focus {
+      border-color: var(--pay-accent);
+      box-shadow: 0 0 0 3px rgba(250, 161, 212, 0.25);
+    }
+
+    /* Primary Big Submit CTA - Ergonomic Mobile Thumb Target */
+    .btn-submit-payment {
+      width: 100%;
+      min-height: 48px;
+      border: none;
+      border-radius: 10px;
+      background: var(--pay-dark);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(16, 11, 14, 0.15);
+      touch-action: manipulation;
+      transition: all 140ms ease;
+    }
+
+    .btn-submit-payment:active {
+      transform: scale(0.98);
+    }
+
+    .btn-submit-payment:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .payment-subtext-trust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 8px;
+      color: var(--pay-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .back-link-subtle {
+      display: inline-block;
+      margin-top: 6px;
+      color: var(--pay-accent);
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Toast Notification for Instant Copy Feedback */
+    .copy-toast {
+      position: fixed;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--pay-dark);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .copy-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Empty state */
+    .empty-state-card {
+      text-align: center;
+      padding: 30px 16px;
+      background: #fff;
+      border: 1px dashed var(--pay-border);
+      border-radius: 14px;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+
+    .empty-state-card h2 {
+      margin: 0 0 8px;
+      color: var(--pay-dark);
+      font-size: 1.2rem;
+    }
+
+    .empty-state-card p {
+      color: var(--pay-muted);
+      font-size: 0.85rem;
+      margin: 0 0 16px;
+    }
+
+    @media (max-width: 880px) {
+      .payment-layout-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
       }
+      .payment-main {
+        padding: 12px 0 24px;
+      }
+      .input-row-compact {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
 
-      .bank-card { position: static; }
-
+    @media (max-width: 480px) {
       .payment-nav {
-        align-items: flex-start;
+        min-height: 50px;
+      }
+      .payment-brand {
+        font-size: 1.35rem;
+      }
+      .payment-stepper span.step-text {
+        display: none;
+      }
+      .highlight-banner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .ref-highlight-box {
         flex-direction: column;
-        padding: 18px 0;
+        align-items: stretch;
+        gap: 8px;
       }
-    }
-
-    @media (max-width: 560px) {
-      .payment-steps {
+      .ref-highlight-box .btn-copy {
         width: 100%;
-        display: grid;
-        grid-template-columns: 1fr;
+        min-height: 38px;
       }
-
-      .reference-box,
-      .line-row {
-        align-items: flex-start;
-        flex-direction: column;
+      .bank-info-row {
+        flex-wrap: wrap;
+        gap: 4px;
       }
-
-      .payment-btn {
-        width: 100%;
+      .bank-info-val code {
+        font-size: 0.85rem;
       }
-
-      .checkout-trust { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -336,52 +714,26 @@
   <header class="payment-topbar">
     <nav class="payment-nav">
       <a class="payment-brand" href="index.html">WISPAIR</a>
-      <div class="payment-steps" aria-label="Checkout steps">
-        <span>1 Details</span>
-        <span class="active">2 EFT Payment</span>
-        <span>3 Owner Review</span>
+      <div class="payment-stepper" aria-label="Checkout steps">
+        <span class="step-badge done">✓ <span class="step-text">Bag & Details</span></span>
+        <span class="step-badge active">2 <span class="step-text">EFT Payment & Proof</span></span>
+        <span class="step-badge">3 <span class="step-text">Confirmation</span></span>
       </div>
     </nav>
   </header>
 
-  <main class="payment-page">
-    <div class="checkout-progress" aria-label="Checkout progress"><span></span></div>
-    <section class="payment-head">
-      <a class="eyebrow" href="index.html">Back to store</a>
-      <span class="checkout-kicker">Secure order review</span>
-      <h1>Review your order, then pay by EFT.</h1>
-      <p class="payment-muted">Your order is reserved while you make the transfer. Use the exact reference below so WISPAIR can match your payment quickly.</p>
-      <div class="checkout-trust"><span>Unique payment reference</span><span>Owner-verified EFT</span><span>Email order updates</span></div>
-    </section>
-
-    <div class="payment-grid">
-      <section class="payment-card">
-        <div class="card-head">
-          <h2>Order review & payment</h2>
-          <span class="payment-muted" id="orderState">Pending payment</span>
-        </div>
-
-        <div id="checkoutContent"></div>
-      </section>
-
-      <aside class="payment-card bank-card">
-        <div class="card-head">
-          <h2>WISPAIR banking details</h2>
-        </div>
-        <div class="bank-lines">
-          <div class="line-row"><span>Bank</span><strong>FNB</strong></div>
-          <div class="line-row"><span>Account number</span><strong>62793660103</strong></div>
-          <div class="line-row"><span>Branch code</span><strong>250655</strong></div>
-          <div class="line-row"><span>Reference</span><strong>Use your WSP reference</strong></div>
-        </div>
-        <p class="payment-muted" style="margin-top: 16px;">Orders stay in payment review until the owner confirms the bank transfer. Always use the personalized WSP reference so your payment can be matched quickly.</p>
-      </aside>
-    </div>
+  <main class="payment-main" id="mainContainer">
+    <div id="checkoutContent"></div>
   </main>
+
+  <div class="copy-toast" id="copyToast" role="status" aria-live="polite">
+    <span style="color: #faa1d4;">✓</span> <span id="copyToastMsg">Copied to clipboard</span>
+  </div>
 
   <script>
     const draftKey = "wispair-order-draft";
     const ordersKey = "wispair-orders";
+
     const money = (value) => Number(value || 0).toLocaleString("en-ZA", { style: "currency", currency: "ZAR" });
     const clean = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
       "&": "&amp;",
@@ -407,16 +759,48 @@
       }
     }
 
+    function showToast(msg) {
+      const toast = document.getElementById("copyToast");
+      const text = document.getElementById("copyToastMsg");
+      text.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2200);
+    }
+
+    function copyToClipboard(text, label) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(`${label} copied!`);
+        }).catch(() => {
+          fallbackCopy(text, label);
+        });
+      } else {
+        fallbackCopy(text, label);
+      }
+    }
+
+    function fallbackCopy(text, label) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast(`${label} copied!`);
+    }
+
     function renderEmpty() {
-      document.getElementById("orderState").textContent = "No order draft";
       document.getElementById("checkoutContent").innerHTML = `
-        <div class="empty-box">
-          <strong>No active order found.</strong><br>
-          Add products to your order bag first, then continue to payment so the reference and total are linked correctly.
-        </div>
-        <div class="payment-actions">
-          <a class="payment-btn primary" href="products.html">Shop products</a>
-          <a class="payment-btn" href="bundles.html">View bundles</a>
+        <div class="empty-state-card">
+          <h2>No active order bag found</h2>
+          <p>Please select your lash items and enter delivery details to generate your EFT payment reference.</p>
+          <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <a class="btn primary" href="products.html" style="text-decoration:none; display:inline-flex; align-items:center; height:42px; padding:0 20px; border-radius:8px; background:#100b0e; color:#fff; font-weight:800; font-size:0.82rem;">Shop Products</a>
+            <a class="btn" href="bundles.html" style="text-decoration:none; display:inline-flex; align-items:center; height:42px; padding:0 20px; border-radius:8px; border:1px solid #d8d0d5; background:#fff; color:#100b0e; font-weight:800; font-size:0.82rem;">View Bundles</a>
+          </div>
         </div>
       `;
     }
@@ -424,105 +808,302 @@
     function renderCheckout(data) {
       const reference = data.reference || `WSP-${Date.now().toString(36).toUpperCase().slice(-6)}`;
       const items = data.items || [];
+      const totalAmount = Number(data.total || 0);
+      const formattedTotal = money(totalAmount);
+      const itemCount = items.reduce((sum, item) => sum + (Number(item.qty) || 1), 0);
+
       document.getElementById("checkoutContent").innerHTML = `
-        <div class="reference-box">
-          <div>
-            <span class="payment-muted">Use this exact EFT reference</span>
-            <strong class="reference-code" id="reference">${clean(reference)}</strong>
-            <div class="copy-note" id="copyNote"></div>
+        <div class="payment-hero-bar">
+          <div class="payment-title-group">
+            <h1>Complete EFT Payment</h1>
+            <p>Transfer the amount below using your unique WSP reference, then attach your proof.</p>
           </div>
-          <button class="payment-btn" type="button" id="copyReference">Copy reference</button>
+          <div class="payment-guarantee-pill">
+            <span>🔒</span> Direct Bank EFT · Owner Verified
+          </div>
         </div>
 
-        <div class="order-lines">
-          <div class="line-row"><span>Customer</span><strong>${clean(data.customer || "Not supplied")}</strong></div>
-          <div class="line-row"><span>Email</span><strong>${clean(data.email || "Not supplied")}</strong></div>
-          <div class="line-row"><span>Phone</span><strong>${clean(data.phone || "Not supplied")}</strong></div>
-          <div class="line-row"><span>Total due</span><strong>${money(data.total)}</strong></div>
-        </div>
-        <div class="order-item-list">${items.map((item) => `<div class="order-item"><span>${clean(item.qty || 1)} × ${clean(item.name || "Item")}</span><strong>${money(Number(item.price || 0) * Number(item.qty || 1))}</strong></div>`).join("")}</div>
-        ${Number(data.discount || 0) > 0 ? `<div class="line-row"><span>Bundle saving</span><strong>−${money(data.discount)}</strong></div>` : ""}
+        <div class="payment-layout-grid">
+          <!-- LEFT COLUMN: BANK DETAILS & REFERENCE -->
+          <section class="pay-card">
+            <div class="card-header-row">
+              <span class="card-step-tag">Step 1</span>
+              <h2>Bank Transfer Details</h2>
+            </div>
 
-        <form id="paymentForm" style="margin-top: 18px;">
-          <label class="payment-label">Account holder name
-            <input class="payment-field" name="name" required autocomplete="name" value="${clean(data.customer || "")}">
-          </label>
-          <label class="payment-label">Email for order updates
-            <input class="payment-field" name="email" type="email" required autocomplete="email" value="${clean(data.email || "")}" placeholder="you@example.com">
-          </label>
-          <label class="payment-label">Payment note (optional)
-            <input class="payment-field" name="proofNote" placeholder="Example: proof sent by WhatsApp">
-          </label>
-          <label class="payment-label">Proof file name for owner reference (optional)
-            <input class="payment-field" name="proof" type="file" accept="image/*,.pdf">
-          </label>
-          <p class="payment-muted" style="margin: -4px 0 14px;">This checkout records the selected file name only. Send the actual proof through your usual WISPAIR contact channel if requested.</p>
-          <button class="payment-btn primary" type="submit" id="submitOrder">I’ve paid — submit order</button>
-          <div class="submit-status" id="submitStatus" aria-live="polite"></div>
-        </form>
-        <a class="edit-details" href="index.html">Need to change something? Return to your order details</a>
-        <div class="secure-note"><strong>What happens next</strong><span>We’ll review the EFT, confirm your order, and send fulfilment updates to your email. No account is required.</span></div>
-        <div id="result"></div>
+            <!-- Total Amount Due Banner -->
+            <div class="highlight-banner">
+              <div>
+                <span class="banner-amount-label">Total Amount Due</span>
+                <span class="banner-amount-val">${formattedTotal}</span>
+              </div>
+              <button class="btn-copy" type="button" onclick="copyToClipboard('${totalAmount.toFixed(2)}', 'Amount')">
+                <span>📋</span> Copy R${totalAmount.toFixed(2)}
+              </button>
+            </div>
+
+            <!-- Reference Box (Highlighted) -->
+            <div class="ref-highlight-box">
+              <div>
+                <span class="ref-title">Required Payment Reference</span>
+                <strong class="ref-code" id="orderRefCode">${clean(reference)}</strong>
+              </div>
+              <button class="btn-copy" type="button" id="copyRefBtn" onclick="copyToClipboard('${reference}', 'Reference')">
+                <span>📋</span> Copy Reference
+              </button>
+            </div>
+
+            <!-- Bank Accounts Table -->
+            <div class="bank-info-grid">
+              <div class="bank-info-row">
+                <span class="bank-info-label">Bank Name</span>
+                <span class="bank-info-val"><strong>First National Bank (FNB)</strong></span>
+              </div>
+              <div class="bank-info-row">
+                <span class="bank-info-label">Account Number</span>
+                <span class="bank-info-val">
+                  <code>62793660103</code>
+                  <button class="btn-copy" type="button" onclick="copyToClipboard('62793660103', 'Account number')">Copy</button>
+                </span>
+              </div>
+              <div class="bank-info-row">
+                <span class="bank-info-label">Branch Code</span>
+                <span class="bank-info-val">
+                  <code>250655</code>
+                  <button class="btn-copy" type="button" onclick="copyToClipboard('250655', 'Branch code')">Copy</button>
+                </span>
+              </div>
+              <div class="bank-info-row">
+                <span class="bank-info-label">Account Holder</span>
+                <span class="bank-info-val">WISPAIR</span>
+              </div>
+              <div class="bank-info-row">
+                <span class="bank-info-label">Account Type</span>
+                <span class="bank-info-val">Cheque / Current</span>
+              </div>
+            </div>
+
+            <p style="margin: 12px 0 0; color: var(--pay-muted); font-size: 0.75rem; line-height: 1.4;">
+              💡 <strong>Important:</strong> Enter <strong>${clean(reference)}</strong> as your recipient reference so your payment is automatically matched without delay.
+            </p>
+          </section>
+
+          <!-- RIGHT COLUMN: UPLOAD PROOF & SUBMIT -->
+          <section class="pay-card">
+            <div class="card-header-row">
+              <span class="card-step-tag">Step 2</span>
+              <h2>Attach Proof & Submit</h2>
+            </div>
+
+            <!-- Compact Order Summary dropdown/pill -->
+            <div class="order-mini-summary">
+              <div class="summary-toggle-head" id="summaryToggle" onclick="toggleSummary()">
+                <span>📦 Order Bag (${itemCount} item${itemCount === 1 ? '' : 's'}) · <strong>${formattedTotal}</strong></span>
+                <span id="summaryArrow" style="font-size: 0.75rem;">▼ View items</span>
+              </div>
+              <div class="summary-items-list" id="summaryItemsList" style="display: none;">
+                ${items.map(item => `
+                  <div class="summary-item-row">
+                    <span>${clean(item.qty || 1)} × ${clean(item.name || 'Lash Item')}</span>
+                    <strong>${money(Number(item.price || 0) * Number(item.qty || 1))}</strong>
+                  </div>
+                `).join('')}
+                ${Number(data.discount || 0) > 0 ? `
+                  <div class="summary-item-row" style="color:#9d2d70;">
+                    <span>Bundle Discount</span>
+                    <strong>−${money(data.discount)}</strong>
+                  </div>
+                ` : ''}
+                <div class="summary-item-row" style="padding-top:4px; border-top:1px solid #e6dfe4; color:var(--pay-dark); font-weight:800;">
+                  <span>Customer: ${clean(data.customer || 'Customer')} (${clean(data.phone || 'No phone')})</span>
+                </div>
+              </div>
+            </div>
+
+            <form id="paymentSubmitForm">
+              <!-- Upload Proof Dropzone -->
+              <div class="upload-zone" id="uploadDropzone">
+                <input type="file" id="proofFileInput" name="proof" accept="image/*,.pdf" onchange="handleFileSelected(this)">
+                <div class="upload-icon">📎</div>
+                <p class="upload-zone-title">Upload Proof of Payment (POP)</p>
+                <p class="upload-zone-hint">Tap to browse or drop bank transfer screenshot / PDF</p>
+                <div class="upload-btn-fake"><span>📁</span> Choose Proof File</div>
+              </div>
+
+              <!-- Selected File Display Badge -->
+              <div class="file-selected-badge" id="fileBadge">
+                <div class="file-selected-info">
+                  <span class="file-icon">📄</span>
+                  <div>
+                    <span class="file-name-text" id="fileNameDisplay">file.pdf</span>
+                    <span class="file-size-text" id="fileSizeDisplay">0 KB</span>
+                  </div>
+                </div>
+                <button type="button" class="btn-remove-file" onclick="removeAttachedFile()">Remove</button>
+              </div>
+
+              <!-- Compact Contact Pre-filled Confirmation -->
+              <div class="input-row-compact">
+                <div class="form-group-compact">
+                  <label for="custName">Payer Name</label>
+                  <input class="form-control-compact" id="custName" name="name" required value="${clean(data.customer || '')}" placeholder="Your full name">
+                </div>
+                <div class="form-group-compact">
+                  <label for="custEmail">Email for Confirmation</label>
+                  <input class="form-control-compact" id="custEmail" name="email" type="email" required value="${clean(data.email || '')}" placeholder="you@example.com">
+                </div>
+              </div>
+
+              <div class="form-group-compact">
+                <label for="paymentNote">Payment Note (Optional)</label>
+                <input class="form-control-compact" id="paymentNote" name="proofNote" placeholder="e.g. Paid via Capitec App / Instant EFT">
+              </div>
+
+              <!-- Big Primary CTA -->
+              <button class="btn-submit-payment" type="submit" id="btnSubmitOrder">
+                <span>🔒</span> I've Paid — Submit Order
+              </button>
+
+              <div class="payment-subtext-trust">
+                <span>✓ Instant email receipt</span> · <span>✓ Fast owner verification</span>
+              </div>
+              <div style="text-align: center;">
+                <a class="back-link-subtle" href="index.html">Need to edit items? Return to bag</a>
+              </div>
+            </form>
+
+            <div id="submitFeedback" style="margin-top: 12px; display: none;"></div>
+          </section>
+        </div>
       `;
 
-      document.getElementById("copyReference").addEventListener("click", () => {
-        if (navigator.clipboard) navigator.clipboard.writeText(reference).catch(() => {});
-        document.getElementById("copyNote").textContent = "Reference copied.";
+      setupDropzone();
+    }
+
+    function toggleSummary() {
+      const list = document.getElementById("summaryItemsList");
+      const arrow = document.getElementById("summaryArrow");
+      if (list.style.display === "none") {
+        list.style.display = "grid";
+        arrow.textContent = "▲ Hide items";
+      } else {
+        list.style.display = "none";
+        arrow.textContent = "▼ View items";
+      }
+    }
+
+    function setupDropzone() {
+      const dropzone = document.getElementById("uploadDropzone");
+      if (!dropzone) return;
+
+      ['dragenter', 'dragover'].forEach(name => {
+        dropzone.addEventListener(name, (e) => {
+          e.preventDefault();
+          dropzone.classList.add('dragover');
+        });
       });
 
-      document.getElementById("paymentForm").addEventListener("submit", async (event) => {
+      ['dragleave', 'drop'].forEach(name => {
+        dropzone.addEventListener(name, (e) => {
+          e.preventDefault();
+          dropzone.classList.remove('dragover');
+        });
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        if (e.dataTransfer && e.dataTransfer.files.length) {
+          const fileInput = document.getElementById("proofFileInput");
+          fileInput.files = e.dataTransfer.files;
+          handleFileSelected(fileInput);
+        }
+      });
+    }
+
+    function handleFileSelected(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        document.getElementById("fileNameDisplay").textContent = file.name;
+        const sizeKb = (file.size / 1024).toFixed(1);
+        document.getElementById("fileSizeDisplay").textContent = `${sizeKb} KB · Ready`;
+        document.getElementById("fileBadge").classList.add("active");
+        document.getElementById("uploadDropzone").style.display = "none";
+      }
+    }
+
+    function removeAttachedFile() {
+      const input = document.getElementById("proofFileInput");
+      input.value = "";
+      document.getElementById("fileBadge").classList.remove("active");
+      document.getElementById("uploadDropzone").style.display = "flex";
+    }
+
+    document.addEventListener("submit", async (event) => {
+      if (event.target && event.target.id === "paymentSubmitForm") {
         event.preventDefault();
-        const formElement = event.currentTarget;
-        const submitButton = formElement.querySelector("[type='submit']");
-        const submitStatus = document.getElementById("submitStatus");
-        if (submitButton.disabled) return;
-        submitButton.disabled = true;
-        submitButton.textContent = "Submitting order…";
-        submitStatus.className = "submit-status";
-        submitStatus.textContent = "Saving your order for owner review.";
+        const formElement = event.target;
+        const submitBtn = document.getElementById("btnSubmitOrder");
+        if (submitBtn.disabled) return;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span>⏳</span> Submitting Order…`;
+
+        const data = readDraft();
         const form = new FormData(formElement);
-        const orders = readOrders();
+        const reference = data.reference || `WSP-${Date.now().toString(36).toUpperCase().slice(-6)}`;
+        const attachedFile = document.getElementById("proofFileInput").files[0];
+
         const order = {
           ...data,
           id: reference,
           reference,
-          customer: form.get("name") || data.customer,
+          customer: form.get("name") || data.customer || "Customer",
           email: form.get("email") || data.email || "",
           status: "Payment review",
           createdAt: new Date().toISOString(),
-          proofName: form.get("proof") && form.get("proof").name ? form.get("proof").name : "",
+          proofName: attachedFile ? attachedFile.name : (data.proofName || ""),
           proofNote: form.get("proofNote") || ""
         };
 
         let persisted = false;
         try {
-          const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(order) });
+          const response = await fetch("/api/orders", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(order)
+          });
           persisted = response.ok;
-        } catch (error) {}
+        } catch (error) {
+          console.warn("API order save fallback:", error);
+        }
 
-        const existingIndex = orders.findIndex((candidate) => candidate.reference === reference);
-        if (existingIndex >= 0) orders[existingIndex] = order;
-        else orders.unshift(order);
-        try { localStorage.setItem(ordersKey, JSON.stringify(orders)); } catch (error) {}
+        const orders = readOrders();
+        const existingIdx = orders.findIndex((o) => (o.reference || o.id) === reference);
+        if (existingIdx >= 0) {
+          orders[existingIdx] = order;
+        } else {
+          orders.unshift(order);
+        }
+
+        try { localStorage.setItem(ordersKey, JSON.stringify(orders)); } catch (e) {}
         localStorage.removeItem(draftKey);
         localStorage.removeItem("wispair-order");
-        formElement.remove();
-        document.getElementById("orderState").textContent = "Submitted";
-        document.getElementById("result").innerHTML = `
-          <div class="success-box">
-            <strong>Payment submitted for review.</strong><br>
-            Keep ${clean(reference)} handy. The owner will confirm the order after matching the bank transfer.${persisted ? " Your order has been securely recorded." : " Your order is saved on this device while online order storage is being configured."}
-            <a class="confirmation-link" href="order-confirmation.html?reference=${encodeURIComponent(reference)}">View your order confirmation →</a>
-          </div>
-          <div class="payment-actions">
-            <a class="payment-btn primary" href="order-confirmation.html?reference=${encodeURIComponent(reference)}">Continue to confirmation</a>
-            <a class="payment-btn" href="index.html">Return to store</a>
+
+        const feedback = document.getElementById("submitFeedback");
+        feedback.style.display = "block";
+        feedback.innerHTML = `
+          <div style="background:var(--pay-success-bg); border:1px solid var(--pay-success-border); border-radius:10px; padding:14px; text-align:center;">
+            <p style="margin:0 0 6px; font-weight:800; color:var(--pay-success); font-size:0.95rem;">✓ Order submitted for owner review!</p>
+            <p style="margin:0; font-size:0.8rem; color:var(--pay-muted);">Redirecting you to your confirmation details…</p>
           </div>
         `;
-        window.setTimeout(() => { window.location.href = `order-confirmation.html?reference=${encodeURIComponent(reference)}`; }, 900);
-      });
-    }
 
+        setTimeout(() => {
+          window.location.href = `order-confirmation.html?reference=${encodeURIComponent(reference)}`;
+        }, 800);
+      }
+    });
+
+    // Initialize
     const draft = readDraft();
     if (!draft.reference || !draft.items || !draft.items.length) {
       renderEmpty();

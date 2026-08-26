@@ -20,7 +20,7 @@ vercel --prod
 ## Owner dashboard
 
 - Dashboard page: `owner.html` or `/owner` on Vercel
-- Default owner PIN: `1410`
+- The owner PIN is stored locally in the browser and can be changed from Settings.
 - Demo orders are seeded for Ruva when the browser has no existing `wispair-orders` data.
 
 ## Manual EFT checkout
@@ -53,4 +53,4 @@ ORDER_EMAIL_TO=<owner-email>
 ORDER_EMAIL_FROM=WISPAIR <orders@your-verified-domain.com>
 ```
 
-Run `supabase/schema.sql` in the Supabase SQL editor before deploying.
+Run `supabase/schema.sql` in the Supabase SQL editor before deploying. It is safe to run again because it uses idempotent table/column changes and recreates the insert policy.

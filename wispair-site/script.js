@@ -126,6 +126,12 @@ function renderCart() {
 
   const savings = bundleSavings();
   cartTotalEl.textContent = money(cartTotal());
+  const selectedItemsEl = document.querySelector("[data-selected-items]");
+  if (selectedItemsEl) {
+    selectedItemsEl.innerHTML = items.length
+      ? items.map(([, item]) => `<span>${item.qty} × ${item.name}</span>`).join("")
+      : `<span class="selected-items-empty">Choose an item above to build your order.</span>`;
+  }
   let existingSavings = document.querySelector("[data-cart-savings]");
   if (!existingSavings && cartTotalEl.parentElement) {
     existingSavings = document.createElement("div");
@@ -228,6 +234,8 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
     `Name: ${form.get("name")}`,
     `Email: ${form.get("email")}`,
     `Phone: ${form.get("phone")}`,
+    `Delivery method: ${form.get("deliveryMethod") || "Delivery"}`,
+    `Address: ${[form.get("street"), form.get("suburb"), form.get("city"), form.get("province"), form.get("postalCode")].filter(Boolean).join(", ")}`,
     `Delivery / collection notes: ${form.get("notes") || "Not provided"}`
   ];
 
@@ -251,6 +259,14 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
       customer: form.get("name"),
       email: form.get("email"),
       phone: form.get("phone"),
+      deliveryMethod: form.get("deliveryMethod") || "Delivery",
+      address: {
+        street: form.get("street") || "",
+        suburb: form.get("suburb") || "",
+        city: form.get("city") || "",
+        province: form.get("province") || "",
+        postalCode: form.get("postalCode") || ""
+      },
       notes: form.get("notes") || ""
     }));
     window.location.href = "payment.html";

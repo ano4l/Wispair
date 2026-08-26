@@ -18,6 +18,7 @@ const itemsHtmlRows = (order) => (order.items || []).map((item) => `
     </td>
   </tr>
 `).join("");
+const orderAddress = (order) => Object.values(order.address || {}).filter(Boolean).join(", ") || "Not provided";
 
 const emailWrap = (title, preheader, bodyContent) => `
 <!DOCTYPE html>
@@ -126,6 +127,8 @@ const templates = {
           </tr>
         </table>
       </div>
+
+      <div style="background: #faf8fa; border: 1px solid #eee8ec; border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 12px; color: #6b646a;"><strong style="color: #100b0e;">${order.delivery_method || order.deliveryMethod || "Delivery"} address:</strong> ${orderAddress(order)}</div>
 
       ${order.notes ? `
         <div style="background: #faf8fa; border: 1px solid #eee8ec; border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 12px; color: #6b646a;">
@@ -267,4 +270,3 @@ async function sendEmail(order, templateName, recipient) {
 }
 
 module.exports = { templates, statusEmailTemplates, sendEmail };
-

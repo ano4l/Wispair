@@ -152,9 +152,12 @@
       <div class="cart-items" data-cart-items></div>
       <div class="cart-total"><span>Total</span><span data-cart-total>R0,00</span></div><div class="cart-savings" data-cart-savings></div>
       <form class="order-form" data-order-form>
+        <fieldset class="selected-items-fieldset"><legend>Selected items</legend><div class="selected-items" data-selected-items></div><small>Items are filled automatically from your order bag.</small></fieldset>
         <label>Name<input name="name" required autocomplete="name"></label>
         <label>Email<input name="email" type="email" required autocomplete="email"></label>
         <label>Phone<input name="phone" required autocomplete="tel"></label>
+        <label>Order type<select name="deliveryMethod"><option value="Delivery">Delivery</option><option value="Collection">Collection</option></select></label>
+        <div class="address-fields"><label>Street address<input name="street" required autocomplete="street-address" placeholder="House number and street"></label><label>Suburb<input name="suburb" required autocomplete="address-line2"></label><label>City<input name="city" required autocomplete="address-level2"></label><label>Province<input name="province" required autocomplete="address-level1"></label><label>Postal code<input name="postalCode" required autocomplete="postal-code" inputmode="numeric"></label></div>
         <label>Delivery or collection notes<textarea name="notes" placeholder="Add address, preferred pickup, or any notes"></textarea></label>
         <button class="btn primary" type="submit">Continue to payment</button>
       </form>

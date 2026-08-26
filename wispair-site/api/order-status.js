@@ -16,8 +16,9 @@ function json(res, status, body) {
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
 
-  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rqscelvjgsfgjvyvxbhe.supabase.co";
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_vO3_ZqcmQd1yUlcni-36lg_Uv0bkNYJ";
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !supabaseKey) return json(res, 503, { error: "Database is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY." });
 
   const { reference, status, fulfilmentNote, order: passedOrder } = req.body || {};
   const template = statusEmailTemplates[status];
@@ -86,4 +87,3 @@ module.exports = async function handler(req, res) {
 
   return json(res, 200, { ok: true, reference, status, emailSent });
 };
-

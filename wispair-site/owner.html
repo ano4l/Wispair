@@ -719,7 +719,7 @@
       <h1>Owner dashboard</h1>
       <p class="owner-muted" style="margin: 10px 0 22px;">Manage manual payments, order status, customer records and fulfilment notes.</p>
       <label class="owner-label">Owner PIN
-        <input id="pin" class="owner-input" type="password" inputmode="numeric" maxlength="4" placeholder="1410" autocomplete="current-password">
+        <input id="pin" class="owner-input" type="password" inputmode="numeric" maxlength="4" placeholder="Enter owner PIN" autocomplete="current-password">
       </label>
       <button class="owner-btn primary full" type="submit" style="margin-top: 16px;">Unlock dashboard</button>
       <p id="loginError" class="owner-muted" style="min-height: 22px; margin-top: 12px;"></p>
@@ -1170,6 +1170,7 @@
           <div class="detail-row"><span>Phone</span><strong>${clean(order.phone || "Not supplied")}</strong></div>
           <div class="detail-row"><span>Total</span><strong>${money(order.total)}</strong></div>
           <div class="detail-row"><span>Items</span><strong>${clean(itemSummary(order))}</strong></div>
+          <div class="detail-row"><span>${clean(order.deliveryMethod || order.delivery_method || "Delivery")}</span><strong>${clean(Object.values(order.address || {}).filter(Boolean).join(", ") || "Not supplied")}</strong></div>
           <div class="detail-row"><span>Proof file</span><strong>${clean(order.proofName || "Not attached")}</strong></div>
           <div class="detail-row"><span>Fulfilment note</span><strong>${clean(order.fulfilmentNote || "Not added")}</strong></div>
           <div class="detail-row"><span>Notes</span><strong>${clean(order.notes || "No notes")}</strong></div>

@@ -16,20 +16,23 @@ function json(res, status, body) {
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
   
-  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rqscelvjgsfgjvyvxbhe.supabase.co";
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_vO3_ZqcmQd1yUlcni-36lg_Uv0bkNYJ";
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const { ORDER_EMAIL_TO } = process.env;
   
   const input = req.body || {};
   if (!input.reference || !input.email || !Array.isArray(input.items) || !input.items.length) {
     return json(res, 400, { error: "Missing order details" });
   }
+  if (!supabaseUrl || !supabaseKey) return json(res, 503, { error: "Database is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY." });
 
   const order = {
     reference: String(input.reference),
     customer: String(input.customer || ""),
     email: String(input.email),
     phone: String(input.phone || ""),
+    delivery_method: String(input.deliveryMethod || "Delivery"),
+    address: input.address && typeof input.address === "object" ? input.address : {},
     notes: String(input.notes || ""),
     items: input.items,
     subtotal: Number(input.subtotal || 0),
@@ -70,4 +73,3 @@ module.exports = async function handler(req, res) {
 
   return json(res, 201, { order, saved: dbSaved });
 };
-

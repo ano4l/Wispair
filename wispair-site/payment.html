@@ -917,6 +917,9 @@
                 <div class="summary-item-row" style="padding-top:4px; border-top:1px solid #e6dfe4; color:var(--pay-dark); font-weight:800;">
                   <span>Customer: ${clean(data.customer || 'Customer')} (${clean(data.phone || 'No phone')})</span>
                 </div>
+                <div class="summary-item-row">
+                  <span>${clean(data.deliveryMethod || 'Delivery')}: ${clean(Object.values(data.address || {}).filter(Boolean).join(', ') || 'Address not provided')}</span>
+                </div>
               </div>
             </div>
 
@@ -1092,8 +1095,8 @@
         feedback.style.display = "block";
         feedback.innerHTML = `
           <div style="background:var(--pay-success-bg); border:1px solid var(--pay-success-border); border-radius:10px; padding:14px; text-align:center;">
-            <p style="margin:0 0 6px; font-weight:800; color:var(--pay-success); font-size:0.95rem;">✓ Order submitted for owner review!</p>
-            <p style="margin:0; font-size:0.8rem; color:var(--pay-muted);">Redirecting you to your confirmation details…</p>
+            <p style="margin:0 0 6px; font-weight:800; color:var(--pay-success); font-size:0.95rem;">✓ Order ${persisted ? "saved and submitted" : "prepared locally"} for owner review!</p>
+            <p style="margin:0; font-size:0.8rem; color:var(--pay-muted);">${persisted ? "Your order was saved to the database. Redirecting you to your confirmation details…" : "The database is not configured yet, so this browser saved a local copy. Configure Supabase before treating it as a live order."}</p>
           </div>
         `;
 

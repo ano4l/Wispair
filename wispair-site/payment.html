@@ -1074,9 +1074,19 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(order)
           });
-          persisted = response.ok;
+          const result = await response.json().catch(() => ({}));
+          persisted = response.ok && result.saved === true;
+          if (!persisted) {
+            throw new Error(result.error || "The order was not saved to the database.");
+          }
         } catch (error) {
-          console.warn("API order save fallback:", error);
+          console.warn("API order save failed:", error);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>🔒</span> I've Paid — Submit Order`;
+          const feedback = document.getElementById("submitFeedback");
+          feedback.style.display = "block";
+          feedback.innerHTML = `<div style="background:#fff3f3; border:1px solid #e4aaaa; border-radius:10px; padding:14px; text-align:center;"><p style="margin:0 0 6px; font-weight:800; color:#a12b2b;">Order not submitted</p><p style="margin:0; font-size:0.8rem; color:var(--pay-muted);">${clean(error.message || "Please try again after the database is configured.")}</p></div>`;
+          return;
         }
 
         const orders = readOrders();
@@ -1095,8 +1105,8 @@
         feedback.style.display = "block";
         feedback.innerHTML = `
           <div style="background:var(--pay-success-bg); border:1px solid var(--pay-success-border); border-radius:10px; padding:14px; text-align:center;">
-            <p style="margin:0 0 6px; font-weight:800; color:var(--pay-success); font-size:0.95rem;">✓ Order ${persisted ? "saved and submitted" : "prepared locally"} for owner review!</p>
-            <p style="margin:0; font-size:0.8rem; color:var(--pay-muted);">${persisted ? "Your order was saved to the database. Redirecting you to your confirmation details…" : "The database is not configured yet, so this browser saved a local copy. Configure Supabase before treating it as a live order."}</p>
+            <p style="margin:0 0 6px; font-weight:800; color:var(--pay-success); font-size:0.95rem;">✓ Order saved and submitted for owner review!</p>
+            <p style="margin:0; font-size:0.8rem; color:var(--pay-muted);">Your order was saved to the database. Redirecting you to your confirmation details…</p>
           </div>
         `;
 

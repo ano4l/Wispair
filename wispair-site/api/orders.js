@@ -71,8 +71,14 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify(order)
     });
     dbSaved = saved.ok;
+    if (!saved.ok) {
+      const detail = await saved.text();
+      console.warn("[Orders API] Supabase rejected order:", saved.status, detail);
+      return json(res, 502, { error: "Database rejected the order. Check that public.orders matches supabase/schema.sql." });
+    }
   } catch (dbErr) {
     console.warn("[Orders API] Supabase store notice:", dbErr);
+    return json(res, 502, { error: "Could not connect to the order database." });
   }
 
   // Dispatch Resend emails in parallel
@@ -85,5 +91,5 @@ module.exports = async function handler(req, res) {
 
   await Promise.allSettled(emailTasks);
 
-  return json(res, 201, { order, saved: dbSaved });
+  return json(res, 201, { order, saved: true });
 };

@@ -960,7 +960,7 @@
 
     async function loadDatabaseOrders() {
       try {
-        const response = await fetch("/api/orders");
+        const response = await fetch("/api/orders", { headers: { "x-owner-pin": localStorage.getItem(pinKey) || "" } });
         if (!response.ok) return;
         const payload = await response.json();
         const databaseOrders = (payload.orders || []).map((order) => ({
@@ -1024,7 +1024,7 @@
       // Trigger Resend email notification via order-status API
       fetch("/api/order-status", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-owner-pin": localStorage.getItem(pinKey) || "" },
         body: JSON.stringify({
           reference: orders[index].reference || orders[index].id,
           status: nextStatus,

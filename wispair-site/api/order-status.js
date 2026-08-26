@@ -1,4 +1,5 @@
 const { sendEmail, statusEmailTemplates } = require("./_email-templates");
+const { isOwnerRequest } = require("./_owner-auth");
 
 function json(res, status, body) {
   if (typeof res.status === "function") {
@@ -15,6 +16,7 @@ function json(res, status, body) {
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
+  if (!isOwnerRequest(req)) return json(res, 401, { error: "Owner authentication required" });
 
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

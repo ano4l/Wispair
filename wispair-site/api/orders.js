@@ -1,4 +1,5 @@
 const { sendEmail } = require("./_email-templates");
+const { isOwnerRequest } = require("./_owner-auth");
 
 function json(res, status, body) {
   if (typeof res.status === "function") {
@@ -21,6 +22,7 @@ module.exports = async function handler(req, res) {
   const { ORDER_EMAIL_TO } = process.env;
 
   if (req.method === "GET") {
+    if (!isOwnerRequest(req)) return json(res, 401, { error: "Owner authentication required" });
     if (!supabaseUrl || !supabaseKey) return json(res, 503, { error: "Database is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY." });
     try {
       const lookup = await fetch(`${supabaseUrl}/rest/v1/orders?select=*&order=created_at.desc&limit=200`, {
@@ -35,8 +37,11 @@ module.exports = async function handler(req, res) {
   }
   
   const input = req.body || {};
-  if (!input.reference || !input.email || !Array.isArray(input.items) || !input.items.length) {
-    return json(res, 400, { error: "Missing order details" });
+  const items = Array.isArray(input.items) ? input.items : [];
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(input.email || ""));
+  const validItems = items.length > 0 && items.length <= 50 && items.every((item) => item && String(item.name || "").length <= 120 && Number.isFinite(Number(item.price)) && Number(item.price) >= 0 && Number.isInteger(Number(item.qty)) && Number(item.qty) > 0 && Number(item.qty) <= 99);
+  if (!/^WSP-[A-Z0-9-]{4,40}$/.test(String(input.reference || "")) || !validEmail || !validItems) {
+    return json(res, 400, { error: "Missing or invalid order details" });
   }
   if (!supabaseUrl || !supabaseKey) return json(res, 503, { error: "Database is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY." });
 

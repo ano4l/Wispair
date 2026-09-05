@@ -57,9 +57,11 @@ try {
 }
 
 const money = (value) => `R${value.toFixed(2).replace(".", ",")}`;
+const DELIVERY_FEE = 99;
 const cartCountEls = document.querySelectorAll("[data-cart-count]");
 const cartItemsEl = document.querySelector("[data-cart-items]");
 const cartTotalEl = document.querySelector("[data-cart-total]");
+const deliveryMethodEl = document.querySelector("[data-order-form] select[name=deliveryMethod]");
 const drawer = document.querySelector("[data-order-drawer]");
 const backdrop = document.querySelector("[data-drawer-backdrop]");
 const toast = document.querySelector("[data-toast]");
@@ -86,7 +88,7 @@ function bundleSavings() {
 
 function cartTotal() {
   const subtotal = Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0);
-  return subtotal - bundleSavings();
+  return subtotal - bundleSavings() + (deliveryMethodEl?.value === "Collection" ? 0 : DELIVERY_FEE);
 }
 
 function showToast(message) {
@@ -125,6 +127,7 @@ function renderCart() {
   }
 
   const savings = bundleSavings();
+  const deliveryFee = deliveryMethodEl?.value === "Collection" ? 0 : DELIVERY_FEE;
   cartTotalEl.textContent = money(cartTotal());
   const selectedItemsEl = document.querySelector("[data-selected-items]");
   if (selectedItemsEl) {
@@ -140,6 +143,16 @@ function renderCart() {
     cartTotalEl.parentElement.insertAdjacentElement("afterend", existingSavings);
   }
   if (existingSavings) existingSavings.textContent = savings ? `Bundle saving: ${money(savings)}` : "";
+  let existingDeliveryFee = document.querySelector("[data-cart-delivery-fee]");
+  if (!existingDeliveryFee && cartTotalEl.parentElement) {
+    existingDeliveryFee = document.createElement("div");
+    existingDeliveryFee.className = "cart-delivery-fee";
+    existingDeliveryFee.dataset.cartDeliveryFee = "";
+    cartTotalEl.parentElement.insertAdjacentElement("afterend", existingDeliveryFee);
+  }
+  if (existingDeliveryFee) {
+    existingDeliveryFee.textContent = deliveryFee ? `Delivery fee: ${money(deliveryFee)}` : "Collection fee: R0,00";
+  }
 }
 
 function openDrawer() {
@@ -196,6 +209,7 @@ document.querySelectorAll("[data-close-order]").forEach((button) => {
 });
 
 backdrop?.addEventListener("click", closeDrawer);
+deliveryMethodEl?.addEventListener("change", renderCart);
 
 const menuToggle = document.querySelector("[data-menu-toggle]");
 menuToggle?.addEventListener("click", () => {
@@ -230,6 +244,7 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
     "",
     ...items.map((item) => `${item.qty} x ${item.name} - ${money(item.price * item.qty)}`),
     "",
+    ...(form.get("deliveryMethod") === "Delivery" ? [`Delivery fee: ${money(DELIVERY_FEE)}`] : []),
     `Total: ${money(cartTotal())}${bundleSavings() ? ` (bundle saving: ${money(bundleSavings())})` : ""}`,
     `Name: ${form.get("name")}`,
     `Email: ${form.get("email")}`,
@@ -240,26 +255,32 @@ document.querySelector("[data-order-form]")?.addEventListener("submit", async (e
   ];
 
   const message = lines.join("\n");
-  let summary = event.currentTarget.querySelector(".order-summary");
+  const orderForm = event.target;
+  let summary = orderForm.querySelector(".order-summary");
   if (!summary) {
     summary = document.createElement("div");
     summary.className = "order-summary";
-    event.currentTarget.append(summary);
+    orderForm.append(summary);
   }
   summary.textContent = message;
 
   const reference = `WSP-${Date.now().toString(36).toUpperCase().slice(-6)}`;
   try {
+    const deliveryMethod = form.get("deliveryMethod") || "Delivery";
+    const subtotal = Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0);
+    const discount = bundleSavings();
+    const deliveryFee = deliveryMethod === "Delivery" ? DELIVERY_FEE : 0;
     localStorage.setItem("wispair-order-draft", JSON.stringify({
       reference,
       items,
-      subtotal: Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0),
-      discount: bundleSavings(),
-      total: cartTotal(),
+      subtotal,
+      discount,
+      deliveryFee,
+      total: subtotal - discount + deliveryFee,
       customer: form.get("name"),
       email: form.get("email"),
       phone: form.get("phone"),
-      deliveryMethod: form.get("deliveryMethod") || "Delivery",
+      deliveryMethod,
       address: {
         street: form.get("street") || "",
         suburb: form.get("suburb") || "",

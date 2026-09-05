@@ -808,7 +808,11 @@
     function renderCheckout(data) {
       const reference = data.reference || `WSP-${Date.now().toString(36).toUpperCase().slice(-6)}`;
       const items = data.items || [];
-      const totalAmount = Number(data.total || 0);
+      const deliveryMethod = data.deliveryMethod || 'Delivery';
+      const subtotal = items.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.qty || 1)), 0);
+      const discount = Number(data.discount || 0);
+      const deliveryFee = Number(data.deliveryFee ?? (deliveryMethod === 'Delivery' ? 99 : 0));
+      const totalAmount = subtotal - discount + deliveryFee;
       const formattedTotal = money(totalAmount);
       const itemCount = items.reduce((sum, item) => sum + (Number(item.qty) || 1), 0);
 
@@ -914,11 +918,17 @@
                     <strong>−${money(data.discount)}</strong>
                   </div>
                 ` : ''}
+                ${deliveryFee > 0 ? `
+                  <div class="summary-item-row">
+                    <span>Delivery Fee</span>
+                    <strong>${money(deliveryFee)}</strong>
+                  </div>
+                ` : ''}
                 <div class="summary-item-row" style="padding-top:4px; border-top:1px solid #e6dfe4; color:var(--pay-dark); font-weight:800;">
                   <span>Customer: ${clean(data.customer || 'Customer')} (${clean(data.phone || 'No phone')})</span>
                 </div>
                 <div class="summary-item-row">
-                  <span>${clean(data.deliveryMethod || 'Delivery')}: ${clean(Object.values(data.address || {}).filter(Boolean).join(', ') || 'Address not provided')}</span>
+                  <span>${clean(deliveryMethod)}: ${clean(Object.values(data.address || {}).filter(Boolean).join(', ') || 'Address not provided')}</span>
                 </div>
               </div>
             </div>
